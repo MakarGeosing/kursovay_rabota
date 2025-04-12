@@ -11,6 +11,7 @@ module com.game {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires com.almasb.fxgl.entity;
+    requires java.desktop;
 
     opens com.game.controllers;
     opens com.game to javafx.fxml;
