@@ -11,14 +11,14 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.game.controllers.regLogController">
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="333.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.game.controllers.regLogController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
             <VBox alignment="TOP_CENTER" layoutX="77.0" layoutY="102.0" prefHeight="194.0" prefWidth="161.0" spacing="15.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Логин" textAlignment="CENTER" wrappingWidth="87.13671875" />
-                  <TextField fx:id="regField" />
+                  <TextField fx:id="regLoginField" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Пароль" textAlignment="CENTER" wrappingWidth="96.115234375" />
                   <PasswordField fx:id="regPasswordField" />
                   <Button fx:id="regBtn" mnemonicParsing="false" onAction="#regBtnAction" text="Зарегистрироваться" />
@@ -46,7 +46,7 @@
             <VBox alignment="TOP_CENTER" layoutX="68.0" layoutY="102.0" prefHeight="194.0" prefWidth="161.0" spacing="15.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Логин" textAlignment="CENTER" wrappingWidth="87.13671875" />
-                  <TextField fx:id="loginField" />
+                  <TextField fx:id="logLoginField" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Пароль" textAlignment="CENTER" wrappingWidth="96.115234375" />
                   <PasswordField fx:id="logPasswordField" />
                   <Button fx:id="loginBtn" mnemonicParsing="false" onAction="#loginBtnAction" text="Войти" />
