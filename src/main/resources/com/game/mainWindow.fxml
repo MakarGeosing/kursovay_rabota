@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.TextFlow?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane layoutX="-1.0" layoutY="364.0" prefHeight="236.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Действия">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="246.0" prefWidth="673.0" />
+            </content>
+          </Tab>
+          <Tab text="Инвентарь">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Настройки">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Pane layoutX="543.0" prefHeight="327.0" prefWidth="157.0">
+         <children>
+            <TextFlow prefHeight="327.0" prefWidth="157.0" />
+         </children>
+      </Pane>
+      <Line endX="100.0" endY="-15.0" layoutX="443.0" layoutY="15.0" startX="100.0" startY="349.0" />
+      <Line endX="100.0" endY="-15.0" layoutX="57.0" layoutY="15.0" startX="100.0" startY="349.0" />
+   </children>
+</AnchorPane>
