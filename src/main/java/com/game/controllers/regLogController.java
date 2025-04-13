@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.game.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,11 @@ public class regLogController {
     private Button loginBtn, regBtn;
 
     private final HashMap<String, String> fieldKeys = new HashMap<>();
+    private Main mainApp;
+
+    public void setMainApp(Main mainApp) {
+        this.mainApp = mainApp;
+    }
 
     @FXML
     void initialize() {}
@@ -39,7 +45,7 @@ public class regLogController {
 
     @FXML
     void loginBtnAction(ActionEvent event) throws IOException {
-        if(validation(logLoginField, logPasswordField)) changeStage("/com/game/mainWindow.fxml", loginBtn, "Game");
+        if(!validation(logLoginField, logPasswordField)) changeStage("/com/game/mainWindow.fxml", loginBtn, "Game");
     }
 
     @FXML
@@ -52,7 +58,15 @@ public class regLogController {
         Stage currentStage = (Stage) BtnName.getScene().getWindow();
 
         Parent root = loader.load();
-        Scene scene = new Scene(root, 700, 600);
+        Scene scene = new Scene(root, 700, 573);
+
+        currentStage.setResizable(false);
+        currentStage.setTitle(title);
+        currentStage.setScene(scene);
+
+        mainWindowController controller = loader.getController();
+        controller.setPlayer(mainApp.player1);
+        controller.setMob(mainApp.mob);
 
         currentStage.setResizable(false);
         currentStage.setTitle(title);
@@ -88,13 +102,15 @@ public class regLogController {
                 Pattern patt = Pattern.compile(regex_password);
                 Matcher matc = patt.matcher(el.getText());
                 if (!matc.matches()) {
-                    showAlert(Alert.AlertType.ERROR,"Ваш пароль должен:\n" +
-                            "Содержать не менее 8 символов и быть не более 255-та знаков.\n" +
-                            "Содержать как минимум одну цифру.\n"+
-                            "Содержать как минимум одну букву в верхнем регистре.\n" +
-                            "Содержать как минимум одну букву в нижнем регистре.\n" +
-                            "Содержать как минимум один специальный символ.\n" +
-                            "Не содержать пробелы.");
+                    showAlert(Alert.AlertType.ERROR, """
+                            Ваш пароль должен:
+                            Содержать не менее 8 символов и быть не более 255-та знаков.
+                            Содержать как минимум одну цифру.
+                            Содержать как минимум одну букву в верхнем регистре.
+                            Содержать как минимум одну букву в нижнем регистре.
+                            Содержать как минимум один специальный символ.
+                            Не содержать пробелы.
+                            """);
                     return false;
                 }
                 else  sendData(el.getText());

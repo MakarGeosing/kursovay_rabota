@@ -1,0 +1,24 @@
+package com.game;
+
+import javafx.scene.control.TextArea;
+
+public class Gamelogs {
+    private final TextArea gameLogsTA;
+
+    public Gamelogs(TextArea gameLogsObject){
+        this.gameLogsTA = gameLogsObject;
+    }
+
+
+    public void appendLogs(String text, Object... args){
+        gameLogsTA.appendText(String.format(text, args));
+    }
+
+    public void clearLogs(){
+        gameLogsTA.clear();
+    }
+
+    public TextArea getGameLogsTA() {
+        return gameLogsTA;
+    }
+}
