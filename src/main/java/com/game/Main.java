@@ -22,7 +22,7 @@ public class Main extends Application {
         stage.setResizable(false);
         stage.show();
 
-        regLogController controller = fxmlLoader.getController();
+        RegLogController controller = fxmlLoader.getController();
         controller.setMainApp(this); // Передаём ссылку на Main
     }
 

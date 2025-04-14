@@ -20,7 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 
-public class regLogController {
+public class RegLogController {
     @FXML
     private ResourceBundle resources;
     @FXML
@@ -64,7 +64,7 @@ public class regLogController {
         currentStage.setTitle(title);
         currentStage.setScene(scene);
 
-        mainWindowController controller = loader.getController();
+        MainWindowController controller = loader.getController();
         controller.setPlayer(mainApp.player1);
         controller.setMob(mainApp.mob);
 

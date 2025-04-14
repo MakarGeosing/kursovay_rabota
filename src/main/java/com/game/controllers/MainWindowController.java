@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import com.game.Actions;
 import com.game.Gamelogs;
 import com.game.Mob;
 import com.game.Player;
@@ -11,22 +12,24 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-public class mainWindowController {
+public class MainWindowController {
     @FXML
     private ResourceBundle resources;
     @FXML
     private URL location;
     @FXML
-    private Button LomAttackBtn,attackBtn,retreatBtn, clearGameLogsBtn,exitBtn;
+    private Button LomAttackBtn,attackBtn,retreatBtn, exitBtn;
+    @FXML
+    private SplitMenuButton clearGameLogsBtn;
     @FXML
     private TextArea gameLogsTA,playerStatsTA, mobStatsTA;
     @FXML
@@ -34,8 +37,8 @@ public class mainWindowController {
     @FXML
     private Label playerAvatarLbl, mobAvatarLbl;
     @FXML
-    private AnchorPane paneMobFight, paneShop;
-
+    public AnchorPane mainPaneMobFight, actionsPaneMobFight,
+            mainPaneShop, actionsPaneShop, mainBlankPane, actionsBlankPane;
 
     private Player player1;
     private Mob mob;
@@ -45,6 +48,8 @@ public class mainWindowController {
     private Gamelogs gamelogs;
     private final Image mobImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/monster.png")).toString());
     private final Image playerImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/player.png")).toString());
+    private String prevLogsText;
+    private Actions actions;
 
     @FXML
     public void initialize() {
@@ -55,6 +60,10 @@ public class mainWindowController {
         playerAvatar.setImage(playerImage);
         mobAvatarGame.imageProperty().bind(mobAvatar.imageProperty());
         playerAvatarGame.imageProperty().bind(playerAvatar.imageProperty());
+        actions = new Actions(this);
+
+
+        Actions.mobFightStart();
     }
 
     public void updateStats(String object, String name, int hp, int dmg) {
@@ -76,15 +85,7 @@ public class mainWindowController {
         updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
     }
 
-    public void changeMainPane(AnchorPane currentPane, AnchorPane nextPane){
-        currentPane.setVisible(false);
-        nextPane.setVisible(true);
-    }
 
-    @FXML
-    void LomAttackBtnAction(ActionEvent event) {
-        gamelogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
-    }
     @FXML
     void attackBtnAction(ActionEvent event) {
         mob.setHp(-(player1.getDmg()));
@@ -92,9 +93,13 @@ public class mainWindowController {
         updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
     }
     @FXML
+    void LomAttackBtnAction(ActionEvent event) {
+        gamelogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
+    }
+    @FXML
     void retreatBtnAction(ActionEvent event) {
         gamelogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
-        changeMainPane(paneMobFight, paneShop);
+        Actions.shopStart();
 
     }
 
@@ -120,13 +125,27 @@ public class mainWindowController {
 
     @FXML
     public void clearGameLogsBtnAction(ActionEvent actionEvent) {
-        gamelogs.clearLogs();
+        String prevLogsTextCheck = gamelogs.getGameLogsText();
+        if(!prevLogsTextCheck.isEmpty()) {
+            prevLogsText = gamelogs.getGameLogsText();
+            gamelogs.clearLogs();
+        }
+
+    }
+    @FXML
+    public void undoClearGameLogsAction(ActionEvent actionEvent) {
+        gamelogs.setLogs(prevLogsText);
     }
 
     @FXML
     public void exitBtnAction(ActionEvent actionEvent) {
         javafx.application.Platform.exit();
+    }
 
+
+
+    public void buy(ActionEvent actionEvent) {
+        Actions.mobFightStart();
     }
 }
 

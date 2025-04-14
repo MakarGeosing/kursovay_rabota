@@ -14,11 +14,18 @@ public class Gamelogs {
         gameLogsTA.appendText(String.format(text, args));
     }
 
+    public void setLogs(String text){
+        gameLogsTA.setText(text);
+    }
+
     public void clearLogs(){
         gameLogsTA.clear();
     }
 
     public TextArea getGameLogsTA() {
         return gameLogsTA;
+    }
+    public String getGameLogsText(){
+        return gameLogsTA.getText();
     }
 }
