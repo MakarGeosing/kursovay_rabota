@@ -56,22 +56,17 @@ public class RegLogController {
     public void changeStage(String FxmlPath, Button BtnName, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(FxmlPath));
         Stage currentStage = (Stage) BtnName.getScene().getWindow();
-
         Parent root = loader.load();
+        MainWindowController controller = loader.getController();
+
+        controller.setPlayer(mainApp.player1);
+        controller.setMob(mainApp.mob);
+
         Scene scene = new Scene(root, 700, 573);
 
         currentStage.setResizable(false);
         currentStage.setTitle(title);
         currentStage.setScene(scene);
-
-        MainWindowController controller = loader.getController();
-        controller.setPlayer(mainApp.player1);
-        controller.setMob(mainApp.mob);
-
-        currentStage.setResizable(false);
-        currentStage.setTitle(title);
-        currentStage.setScene(scene);
-
     }
 
 
@@ -119,7 +114,7 @@ public class RegLogController {
         return true;
     }
 
-    public void showAlert(Alert.AlertType alertType, String msg){
+    public static void showAlert(Alert.AlertType alertType, String msg){
         Alert alert = new Alert(alertType,  msg );
         alert.show();
     }

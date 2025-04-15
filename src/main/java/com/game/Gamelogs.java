@@ -1,5 +1,6 @@
 package com.game;
 
+import com.game.controllers.MainWindowController;
 import javafx.scene.control.TextArea;
 
 public class Gamelogs {
@@ -11,7 +12,7 @@ public class Gamelogs {
 
 
     public void appendLogs(String text, Object... args){
-        gameLogsTA.appendText(String.format(text, args));
+         gameLogsTA.appendText(String.format(text, args));
     }
 
     public void setLogs(String text){
@@ -25,7 +26,7 @@ public class Gamelogs {
     public TextArea getGameLogsTA() {
         return gameLogsTA;
     }
-    public String getGameLogsText(){
+    public  String getGameLogsText(){
         return gameLogsTA.getText();
     }
 }

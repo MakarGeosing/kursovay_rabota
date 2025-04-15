@@ -12,10 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,11 +24,19 @@ public class MainWindowController {
     @FXML
     private URL location;
     @FXML
+    private TextField moveField;
+    @FXML
+    private MenuItem attackMenu, LomAttackMenu, retreatMenu;
+    @FXML
     private Button LomAttackBtn,attackBtn,retreatBtn, exitBtn;
     @FXML
-    private SplitMenuButton clearGameLogsBtn;
+    private SplitMenuButton clearGameLogsBtn,submitMenuBtn;
     @FXML
-    private TextArea gameLogsTA,playerStatsTA, mobStatsTA;
+    private TextArea gameLogsTA;
+    @FXML
+    private TextArea playerStatsTA;
+    @FXML
+    private TextArea mobStatsTA;
     @FXML
     private ImageView mobAvatarGame,playerAvatar,playerAvatarGame, mobAvatar;
     @FXML
@@ -62,8 +67,8 @@ public class MainWindowController {
         playerAvatarGame.imageProperty().bind(playerAvatar.imageProperty());
         actions = new Actions(this);
 
-
         Actions.mobFightStart();
+
     }
 
     public void updateStats(String object, String name, int hp, int dmg) {
@@ -85,6 +90,38 @@ public class MainWindowController {
         updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
     }
 
+    @FXML
+    public void submitMenuAction(ActionEvent actionEvent) {
+        if (getMoveFieldText().equals("Обычная атака")){
+            mob.setHp(-(player1.getDmg()));
+            gamelogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
+            updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
+        }
+        else if (getMoveFieldText().equals("Атака ломом")) {
+            gamelogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
+        }
+        else if (getMoveFieldText().equals("Отступить")) {
+            gamelogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
+            Actions.shopStart();
+        }
+        else {
+            RegLogController.showAlert(Alert.AlertType.ERROR, """
+                    Введено неверное действие
+                    Подсказка: Вы можете нажать на стрелочку справа от кнопки "Подвердить ход" и узнать все доступные на
+                    данный момент действия
+                    """);
+        }
+    }
+
+    public void attackMenuAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getAttackMenu());
+    }
+    public void LomAttackMenuAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getLomAttackMenu());
+    }
+    public void retreatMenuAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getRetreatMenu());
+    }
 
     @FXML
     void attackBtnAction(ActionEvent event) {
@@ -146,6 +183,27 @@ public class MainWindowController {
 
     public void buy(ActionEvent actionEvent) {
         Actions.mobFightStart();
+    }
+
+
+    public TextField getMoveField() {
+        return moveField;
+    }
+    public String getMoveFieldText() {
+        return moveField.getText();
+    }
+    public MenuItem getAttackMenu() {
+        return attackMenu;
+    }
+    public MenuItem getLomAttackMenu() {
+        return LomAttackMenu;
+    }
+    public MenuItem getRetreatMenu() {
+        return retreatMenu;
+    }
+
+    public TextArea getGameLogsTA() {
+        return gameLogsTA;
     }
 }
 

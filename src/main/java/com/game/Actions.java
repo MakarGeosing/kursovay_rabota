@@ -1,6 +1,8 @@
 package com.game;
 
 import com.game.controllers.MainWindowController;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
@@ -54,5 +56,9 @@ public class Actions {
         changePane(currentMainPane, controller.mainPaneShop);
         changePane(currentActionsPane, controller.actionsPaneShop);
 
+    }
+
+    public static void setMove(TextField field, MenuItem menuItem){
+        field.setText(menuItem.getText());
     }
 }
