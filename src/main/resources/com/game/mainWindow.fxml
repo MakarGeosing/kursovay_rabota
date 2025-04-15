@@ -21,13 +21,13 @@
             <content>
               <AnchorPane>
                      <children>
-                        <AnchorPane fx:id="actionsPaneMobFight" prefHeight="165.0" prefWidth="700.0">
+                        <AnchorPane fx:id="actionsPaneMobFight" prefHeight="165.0" prefWidth="700.0" visible="false">
                            <children>
                               <Button fx:id="attackBtn" layoutX="31.0" layoutY="14.0" mnemonicParsing="false" onAction="#attackBtnAction" text="Обычная атака" />
                               <Button fx:id="LomAttackBtn" layoutX="31.0" layoutY="58.0" mnemonicParsing="false" onAction="#LomAttackBtnAction" text="Атака ломом" />
                               <Button fx:id="retreatBtn" layoutX="31.0" layoutY="102.0" mnemonicParsing="false" onAction="#retreatBtnAction" text="Отступить" />
-                              <TextField fx:id="moveField" layoutX="417.0" layoutY="2.0" />
-                              <SplitMenuButton fx:id="submitMenuBtn" layoutX="566.0" layoutY="2.0" mnemonicParsing="false" onAction="#submitMenuAction" prefHeight="25.0" prefWidth="134.0" text="Подтвердить ход">
+                              <TextField fx:id="moveField" layoutX="417.0" layoutY="46.0" />
+                              <SplitMenuButton fx:id="submitMenuBtn" layoutX="566.0" layoutY="46.0" mnemonicParsing="false" onAction="#submitMenuAction" prefHeight="25.0" prefWidth="134.0" text="Подтвердить ход">
                                  <items>
                                   <MenuItem fx:id="attackMenu" mnemonicParsing="false" onAction="#attackMenuAction" text="Обычная атака" />
                                   <MenuItem fx:id="LomAttackMenu" mnemonicParsing="false" onAction="#LomAttackMenuAction" text="Атака ломом" />
@@ -40,7 +40,8 @@
                            <children>
                               <Button layoutX="295.0" layoutY="58.0" mnemonicParsing="false" onAction="#buy" text="Купить товар" />
                            </children></AnchorPane>
-                        <AnchorPane fx:id="actionsBlankPane" prefHeight="165.0" prefWidth="700.0" visible="false" />
+                        <AnchorPane fx:id="actionsPaneQuest1" prefHeight="165.0" prefWidth="700.0" visible="false" />
+                        <AnchorPane fx:id="actionsPaneBlank" prefHeight="165.0" prefWidth="700.0" visible="false" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -100,6 +101,7 @@
             <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="253.0" layoutY="63.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" visible="false" wrapText="true" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainBlankPane" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
+      <AnchorPane fx:id="mainPaneBlank" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
+      <AnchorPane fx:id="mainPane" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
    </children>
 </AnchorPane>
