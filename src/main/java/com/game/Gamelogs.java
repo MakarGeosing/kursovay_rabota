@@ -1,10 +1,10 @@
 package com.game;
 
-import com.game.controllers.MainWindowController;
 import javafx.scene.control.TextArea;
 
 public class Gamelogs {
     private final TextArea gameLogsTA;
+
 
     public Gamelogs(TextArea gameLogsObject){
         this.gameLogsTA = gameLogsObject;

@@ -26,45 +26,47 @@ public class MainWindowController {
     @FXML
     private TextField moveField;
     @FXML
-    private MenuItem attackMenu, LomAttackMenu, retreatMenu;
+    private MenuItem firstMenuItem, secMenuItem, thirdMenuItem, undoClearGameLogsMenuItem;
     @FXML
     private Button LomAttackBtn,attackBtn,retreatBtn, exitBtn;
     @FXML
-    private SplitMenuButton clearGameLogsBtn,submitMenuBtn;
+    private SplitMenuButton clearGameLogsBtn, submitMenuBtn;
     @FXML
-    private TextArea gameLogsTA;
-    @FXML
-    private TextArea playerStatsTA;
-    @FXML
-    private TextArea mobStatsTA;
+    private TextArea gameLogsTA, playerLogsTA, playerStatsTA, mobStatsTA;
     @FXML
     private ImageView mobAvatarGame,playerAvatar,playerAvatarGame, mobAvatar;
     @FXML
     private Label playerAvatarLbl, mobAvatarLbl;
     @FXML
-    public AnchorPane mainPaneMobFight, actionsPaneMobFight,
-            mainPaneShop, actionsPaneShop, mainBlankPane, actionsBlankPane;
+    private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
+
 
     private Player player1;
     private Mob mob;
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
-    private Gamelogs gamelogs;
+    private Gamelogs gameLogs;
+    private Gamelogs playerLogs;
     private final Image mobImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/monster.png")).toString());
     private final Image playerImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/player.png")).toString());
-    private String prevLogsText;
+    private String prevGameLogsText, prevPlayerLogsText;
     private Actions actions;
 
     @FXML
     public void initialize() {
-        gamelogs = new Gamelogs(gameLogsTA);
+        gameLogs = new Gamelogs(gameLogsTA);
+        playerLogs = new Gamelogs(playerLogsTA);
         playerStatsTA.textProperty().bind(playerStats);
         mobStatsTA.textProperty().bind(mobStats);
         mobAvatar.setImage(mobImage);
         playerAvatar.setImage(playerImage);
+
         mobAvatarGame.imageProperty().bind(mobAvatar.imageProperty());
+        mobAvatarGame.visibleProperty().bind(mobAvatar.visibleProperty());
+
         playerAvatarGame.imageProperty().bind(playerAvatar.imageProperty());
+        mobStatsTA.visibleProperty().bind(mobAvatar.visibleProperty());
         actions = new Actions(this);
 
         Actions.mobFightStart();
@@ -92,17 +94,34 @@ public class MainWindowController {
 
     @FXML
     public void submitMenuAction(ActionEvent actionEvent) {
-        if (getMoveFieldText().equals("Обычная атака")){
-            mob.setHp(-(player1.getDmg()));
-            gamelogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
-            updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
+        if (getMoveFieldText().equals("Отступить") || getMoveFieldText().equals("Уйти")){
+            playerAvatarGame.setVisible(false);
+            mobAvatar.setVisible(false);
+            if(getMoveFieldText().equals("Отступить")){
+                playerLogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
+                Actions.shopStart();
+            }
+            else{
+                playerLogs.appendLogs("Вы ушли.\n");
+                Actions.mobFightStart();
+            }
+
+
         }
         else if (getMoveFieldText().equals("Атака ломом")) {
-            gamelogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
+            gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
         }
-        else if (getMoveFieldText().equals("Отступить")) {
-            gamelogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
-            Actions.shopStart();
+        else if (getMoveFieldText().equals("Обычная атака")) {
+            mob.setHp(-(player1.getDmg()));
+            gameLogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
+            updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
+            Actions.mobFightStart();
+        }
+        else if (getMoveFieldText().equals("Купить предмет")){
+            playerLogs.appendLogs("Предмет куплен\n");
+        }
+        else if (getMoveFieldText().equals("Продать предмет")){
+            playerLogs.appendLogs("Предмет продан\n");
         }
         else {
             RegLogController.showAlert(Alert.AlertType.ERROR, """
@@ -112,34 +131,18 @@ public class MainWindowController {
                     """);
         }
     }
-
-    public void attackMenuAction(ActionEvent actionEvent) {
-        Actions.setMove(getMoveField(),getAttackMenu());
-    }
-    public void LomAttackMenuAction(ActionEvent actionEvent) {
-        Actions.setMove(getMoveField(),getLomAttackMenu());
-    }
-    public void retreatMenuAction(ActionEvent actionEvent) {
-        Actions.setMove(getMoveField(),getRetreatMenu());
-    }
-
     @FXML
-    void attackBtnAction(ActionEvent event) {
-        mob.setHp(-(player1.getDmg()));
-        gamelogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
-        updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg());
+    public void firstMenuItemAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getFirstMenuItem());
     }
     @FXML
-    void LomAttackBtnAction(ActionEvent event) {
-        gamelogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName() ,(player1.getDmg()*2));
+    public void secMenuItemAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getSecMenuItemMenu());
     }
     @FXML
-    void retreatBtnAction(ActionEvent event) {
-        gamelogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
-        Actions.shopStart();
-
+    public void thirdMenuItemAction(ActionEvent actionEvent) {
+        Actions.setMove(getMoveField(),getThirdMenuItem());
     }
-
 
     @FXML
     void playerAvatarEntered(MouseEvent event) {
@@ -162,16 +165,37 @@ public class MainWindowController {
 
     @FXML
     public void clearGameLogsBtnAction(ActionEvent actionEvent) {
-        String prevLogsTextCheck = gamelogs.getGameLogsText();
-        if(!prevLogsTextCheck.isEmpty()) {
-            prevLogsText = gamelogs.getGameLogsText();
-            gamelogs.clearLogs();
+        try {
+            if (gameLogs != null) {
+                String prevGameLogsTextCheck = gameLogs.getGameLogsText();
+                if (!prevGameLogsTextCheck.isEmpty()) {
+                    prevGameLogsText = gameLogs.getGameLogsText();
+                    gameLogs.clearLogs();
+                }
+            }
+            if (playerLogs != null) {
+                String prevPlayerLogsTextCheck = playerLogs.getGameLogsText();
+                if (!prevPlayerLogsTextCheck.isEmpty()) {
+                    prevPlayerLogsText = playerLogs.getGameLogsText();
+                    playerLogs.clearLogs();
+                }
+            }
         }
+        catch (Exception e) {/*pass*/}
 
     }
     @FXML
     public void undoClearGameLogsAction(ActionEvent actionEvent) {
-        gamelogs.setLogs(prevLogsText);
+        if(gameLogs.getGameLogsText().length() > prevGameLogsText.length()){
+            //pass
+        }
+        else if(playerLogs.getGameLogsText().length() > prevPlayerLogsText.length()){
+            //pass
+        }
+        else {
+            gameLogs.setLogs(prevGameLogsText);
+            playerLogs.setLogs(prevPlayerLogsText);
+        }
     }
 
     @FXML
@@ -185,25 +209,74 @@ public class MainWindowController {
         Actions.mobFightStart();
     }
 
-
+    public TextArea getMobStatsTA() {
+        return mobStatsTA;
+    }
     public TextField getMoveField() {
         return moveField;
     }
     public String getMoveFieldText() {
         return moveField.getText();
     }
-    public MenuItem getAttackMenu() {
-        return attackMenu;
+    public MenuItem getFirstMenuItem() {
+        return firstMenuItem;
     }
-    public MenuItem getLomAttackMenu() {
-        return LomAttackMenu;
+    public MenuItem getSecMenuItemMenu() {
+        return secMenuItem;
     }
-    public MenuItem getRetreatMenu() {
-        return retreatMenu;
+    public MenuItem getThirdMenuItem() {
+        return thirdMenuItem;
     }
 
     public TextArea getGameLogsTA() {
         return gameLogsTA;
+    }
+    public AnchorPane getActionsPane() {
+        return actionsPane;
+    }
+
+    public AnchorPane getActionsPaneBlank() {
+        return actionsPaneBlank;
+    }
+
+    public AnchorPane getMainPaneBlank() {
+        return mainPaneBlank;
+    }
+
+    public AnchorPane getMainPaneMobFight() {
+        return mainPaneMobFight;
+    }
+
+    public AnchorPane getMainPaneQuest1() {
+        return mainPaneQuest1;
+    }
+
+    public AnchorPane getMainPaneShop() {
+        return mainPaneShop;
+    }
+
+    public ImageView getMobAvatar() {
+        return mobAvatar;
+    }
+
+    public ImageView getMobAvatarGame() {
+        return mobAvatarGame;
+    }
+
+    public ImageView getPlayerAvatar() {
+        return playerAvatar;
+    }
+
+    public ImageView getPlayerAvatarGame() {
+        return playerAvatarGame;
+    }
+
+    public TextArea getPlayerLogsTA() {
+        return playerLogsTA;
+    }
+
+    public void setPlayerLogsTA(TextArea playerLogsTA) {
+        this.playerLogsTA = playerLogsTA;
     }
 }
 
