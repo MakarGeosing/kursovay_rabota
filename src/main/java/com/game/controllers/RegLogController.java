@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.game.Main;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,11 +33,7 @@ public class RegLogController {
     private Button loginBtn, regBtn;
 
     private final HashMap<String, String> fieldKeys = new HashMap<>();
-    private Main mainApp;
 
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
-    }
 
     @FXML
     void initialize() {}
@@ -47,7 +43,6 @@ public class RegLogController {
     void loginBtnAction(ActionEvent event) throws IOException {
         if(!validation(logLoginField, logPasswordField)) changeStage("/com/game/mainWindow.fxml", loginBtn, "Game");
     }
-
     @FXML
     void regBtnAction(ActionEvent event) throws IOException {
         if(validation(regLoginField, regPasswordField)) changeStage("/com/game/mainWindow.fxml", loginBtn, "Game");
@@ -57,11 +52,6 @@ public class RegLogController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(FxmlPath));
         Stage currentStage = (Stage) BtnName.getScene().getWindow();
         Parent root = loader.load();
-        MainWindowController controller = loader.getController();
-
-        controller.setPlayer(mainApp.player1);
-        controller.setMob(mainApp.mob);
-
         Scene scene = new Scene(root, 700, 573);
 
         currentStage.setResizable(false);

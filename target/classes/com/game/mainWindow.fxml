@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
@@ -9,6 +10,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -81,14 +83,8 @@
             </SplitMenuButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
-         <children>
-            <Button layoutX="164.0" layoutY="178.0" mnemonicParsing="false" text="Магазин" />
-         </children>
-      </AnchorPane>
       <AnchorPane fx:id="mainPaneMobFight" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
-            <ImageView fx:id="playerAvatarGame3" fitHeight="128.0" fitWidth="118.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="mobAvatarGame3" fitHeight="128.0" fitWidth="118.0" layoutX="253.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="playerAvatarLbl" layoutX="40.0" layoutY="82.0" text="Это вы" visible="false" />
             <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="253.0" layoutY="63.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" visible="false" wrapText="true" />
@@ -98,5 +94,18 @@
       <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
       <ImageView fx:id="playerAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="154.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="405.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
+      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0">
+         <children>
+            <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomClicked" pickOnBounds="true" preserveRatio="true" smooth="false">
+               <image>
+                  <Image url="@lom.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Label fx:id="lomQuantityLbl" layoutX="35.0" layoutY="190.0" text="Количество:" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
