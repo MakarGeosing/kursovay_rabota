@@ -110,6 +110,7 @@ public class Actions {
                 player1.setInventory(el, i);
                 controller.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
                 playerLogs.appendLogs("Предмет куплен\n");
+                playerLogs.appendLogs(player1.getInventory().toString());
             }
         }
         else{
