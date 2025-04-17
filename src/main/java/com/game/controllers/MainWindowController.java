@@ -48,7 +48,7 @@ public class MainWindowController {
 
 
     static Player player1 = new Player(1,"Makar" ,100, 10, 20);
-    static Mob mob = new Mob(1, "Abracadabra", 100, 10);
+    static Mob mob = new Mob(1, "Чурбек", 100, 10);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
@@ -58,7 +58,7 @@ public class MainWindowController {
     private final Image playerImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/player.png")).toString());
     private final Image shopImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/shop.png")).toString());
     private final Image LomImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/lom.png")).toString());
-    private String prevGameLogsText, prevPlayerLogsText;
+    private String prevGameLogsText = "", prevPlayerLogsText = "";
     private Actions actions;
     private List<String> items = new ArrayList<String>();
     private int cart;
@@ -95,20 +95,30 @@ public class MainWindowController {
             playerLogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
             Actions.shopStart();
         }
-        else if(getMoveFieldText().equals("Уйти"))
+        else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
         {
             playerLogs.appendLogs("Вы ушли.\n");
             Actions.mobFightStart();
         }
         else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
         {
-            gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName(), (player1.getDmg() * 2));
+
+            if((int) player1.getInventory().get("lom") >= 1) {
+                System.out.println(player1.getInventory().get("lom"));
+                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName(), (player1.getDmg() * 2));
+                mob.setHp(-(player1.getDmg()*2));
+                player1.setInventory("lom",-1);
+                updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
+                System.out.println(player1.getInventory());
+            }
+            else {
+                playerLogs.appendLogs("У вас нету лома\n");
+            }
         }
         else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
             mob.setHp(-(player1.getDmg()));
             gameLogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
             updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
-            Actions.mobFightStart();
         }
         else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
             Actions.shopBuy(items);
@@ -186,7 +196,7 @@ public class MainWindowController {
 
     @FXML
     public void undoClearGameLogsAction(ActionEvent actionEvent) {
-        if (gameLogs.getGameLogsText().length() > prevGameLogsText.length()) {
+        if (gameLogs.getGameLogsText().length() > prevGameLogsText.length())  {
             //pass
         }
         else if (playerLogs.getGameLogsText().length() > prevPlayerLogsText.length()) {
@@ -326,6 +336,9 @@ public class MainWindowController {
     }
     public Label getLomQuantityLbl() {
         return lomQuantityLbl;
+    }
+    public void setCart(int value) {
+        cart = value;
     }
 
     public void setPlayerLogsTA(TextArea playerLogsTA) {

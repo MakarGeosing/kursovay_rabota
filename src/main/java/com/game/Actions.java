@@ -102,27 +102,33 @@ public class Actions {
 
     }
     public static void shopBuy(List<String> items){
-        if(player1.getMoney() > (rndLomCost * items.size())){
-            player1.setMoney(player1.getMoney() - rndLomCost);
+        if(player1.getMoney() >= (rndLomCost * items.size())){
+            player1.setMoney(player1.getMoney() - (rndLomCost * items.size()));
             for(String el: items){
-                int i = 0;
-                i++;
-                player1.setInventory(el, i);
+                if(el.equals("lom")){
+                    int lomQuantity = 0;
+                    lomQuantity++;
+                    player1.setInventory(el, lomQuantity);
+                }
+
                 controller.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
                 playerLogs.appendLogs("Предмет куплен\n");
-                playerLogs.appendLogs(player1.getInventory().toString());
+                playerLogs.appendLogs(player1.getInventory().toString() + "\n");
             }
         }
-        else{
+        else
+        {
             playerLogs.appendLogs("У вас недостаточно средств\n");
         }
+        controller.setCart(0);
+        gamelogs.appendLogs("Корзина очистилась\n");
         items.clear();
 
     }
 
     public static int randomCost(){
         Random rndCost = new Random();
-        return rndCost.nextInt(5,20);
+        return rndCost.nextInt(1,5);
     }
 
     public static void setMove(TextField field, MenuItem menuItem){
