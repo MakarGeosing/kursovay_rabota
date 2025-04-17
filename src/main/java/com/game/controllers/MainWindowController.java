@@ -15,9 +15,6 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -34,21 +31,18 @@ public class MainWindowController {
     @FXML
     private MenuItem firstMenuItem, secMenuItem, thirdMenuItem, undoClearGameLogsMenuItem;
     @FXML
-    private Button LomAttackBtn, attackBtn, retreatBtn, exitBtn;
-    @FXML
     private SplitMenuButton clearGameLogsBtn, submitMenuBtn;
     @FXML
     private TextArea gameLogsTA, playerLogsTA, playerStatsTA, mobStatsTA;
     @FXML
     private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame;
     @FXML
-    private Label playerAvatarLbl, mobAvatarLbl, lomQuantityLbl;
+    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, shopHintLbl;
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
-
-    static Player player1 = new Player(1,"Makar" ,100, 10, 20);
-    static Mob mob = new Mob(1, "Чурбек", 100, 10);
+    private Mob mob;
+    private final Player player1 = new Player(1,"Makar" ,100, 10, 20);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
@@ -59,29 +53,26 @@ public class MainWindowController {
     private final Image shopImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/shop.png")).toString());
     private final Image LomImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/lom.png")).toString());
     private String prevGameLogsText = "", prevPlayerLogsText = "";
-    private Actions actions;
-    private List<String> items = new ArrayList<String>();
+    private final List<String> items = new ArrayList<String>();
     private int cart;
 
     @FXML
     public void initialize() {
+        mob = Mob.createMob();
         gameLogs = new Gamelogs(gameLogsTA);
         playerLogs = new Gamelogs(playerLogsTA);
-        playerStatsTA.textProperty().bind(playerStats);
-        mobStatsTA.textProperty().bind(mobStats);
         playerAvatar.setImage(playerImage);
 
+        playerStatsTA.textProperty().bind(playerStats);
+        mobStatsTA.textProperty().bind(mobStats);
         mobAvatarGame.imageProperty().bind(mobAvatar.imageProperty());
-
         playerAvatarGame.imageProperty().bind(playerAvatar.imageProperty());
+
         mobStatsTA.visibleProperty().bind(mobAvatar.visibleProperty());
-        actions = new Actions(this);
-        actions.setPlayer(player1);
 
-        updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
-
+        Actions actions = new Actions(this);
+        Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
         Actions.mobFightStart();
-
     }
 
 
@@ -108,7 +99,7 @@ public class MainWindowController {
                 gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName(), (player1.getDmg() * 2));
                 mob.setHp(-(player1.getDmg()*2));
                 player1.setInventory("lom",-1);
-                updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
+                Actions.updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
                 System.out.println(player1.getInventory());
             }
             else {
@@ -118,7 +109,7 @@ public class MainWindowController {
         else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
             mob.setHp(-(player1.getDmg()));
             gameLogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
-            updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
+            Actions.updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
         }
         else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
             Actions.shopBuy(items);
@@ -152,14 +143,41 @@ public class MainWindowController {
     }
 
     @FXML
+    public void lomClicked(MouseEvent mouseEvent) throws InterruptedException {
+        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+            cart += 1;
+            playerLogs.appendLogs("Лом добавлен в корзину\n");
+            gameLogs.appendLogs("""
+                    Корзина: Лом %d
+                    """, cart);
+            items.add("lom");
+
+        }
+        else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            if (!items.isEmpty()){
+                cart -= 1;
+                items.removeLast();
+                playerLogs.appendLogs("Последний предмет удалён из корзины\n");
+                gameLogs.appendLogs("""
+                    Корзина: Лом %d
+                    """, cart);
+            }
+            else {
+                cart = 0;
+                playerLogs.appendLogs("Корзина пуста\n");
+            }
+
+        }
+    }
+
+    @FXML
     void playerAvatarEntered(MouseEvent event) {
         playerAvatarLbl.setVisible(true);
     }
 
     @FXML
     void mobAvatarEntered(MouseEvent event) {
-        mobName.set(String.format("Это монстр %s", mob.getName()));
-        mobAvatarLbl.textProperty().bind(mobName);
+        mobAvatarLbl.setText(String.format("Это монстр %s", mob.getName()));
         mobAvatarLbl.setVisible(true);
     }
 
@@ -211,42 +229,6 @@ public class MainWindowController {
     @FXML
     public void exitBtnAction(ActionEvent actionEvent) {
         javafx.application.Platform.exit();
-    }
-
-    @FXML
-    public void lomClicked(MouseEvent mouseEvent) throws InterruptedException {
-        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            cart += 1;
-            playerLogs.appendLogs("Лом добавлен в корзину\n");
-            gameLogs.appendLogs("""
-                    Корзина: Лом %d
-                    """, cart);
-            items.add("lom");
-
-        }
-        else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-            if (!items.isEmpty()){
-                cart -= 1;
-                items.removeLast();
-                playerLogs.appendLogs("Последний предмет удалён из корзины\n");
-                gameLogs.appendLogs("""
-                    Корзина: Лом %d
-                    """, cart);
-            }
-            else {
-                cart = 0;
-                playerLogs.appendLogs("Корзина пуста\n");
-            }
-
-        }
-    }
-
-    public void updateStats(String object, String name, int hp, int dmg, int money) {
-        if (object.equals("player")) {
-            playerStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d\nДЕНЬГИ: %d", name, hp, dmg, money));
-        } else {
-            mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
-        }
     }
 
 
@@ -307,9 +289,9 @@ public class MainWindowController {
     public Player getPlayer() {
         return player1;
     }
-    public Mob getMob() {
-        return mob;
-    }
+    //public Mob getMob() {
+    //    return mob;
+    //}
     public Image getShopImage() {
         return shopImage;
     }
@@ -334,13 +316,22 @@ public class MainWindowController {
     public ImageView getLomAvatarGame() {
         return lomAvatarGame;
     }
-    public Label getLomQuantityLbl() {
-        return lomQuantityLbl;
+    public Label getLomCostLbl() {
+        return lomCostLbl;
     }
+    public String getPlayerStats() {
+        return playerStats.get();
+    }
+    public StringProperty getPlayerStatsProperty() {
+        return playerStats;
+    }
+    public Label getShopHintLbl() {
+        return shopHintLbl;
+    }
+
     public void setCart(int value) {
         cart = value;
     }
-
     public void setPlayerLogsTA(TextArea playerLogsTA) {
         this.playerLogsTA = playerLogsTA;
     }

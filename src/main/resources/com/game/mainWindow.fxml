@@ -96,7 +96,7 @@
       <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="405.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
       <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0">
          <children>
-            <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomClicked" pickOnBounds="true" preserveRatio="true" smooth="false">
+            <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomClicked" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@lom.png" />
                </image>
@@ -104,7 +104,8 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="lomQuantityLbl" layoutX="35.0" layoutY="190.0" text="Количество:" />
+            <Label fx:id="lomCostLbl" layoutX="35.0" layoutY="190.0" text="Количество:" />
+            <Label fx:id="shopHintLbl" layoutX="229.0" layoutY="327.0" prefHeight="39.0" prefWidth="147.0" text="Лкм - Добавить в корзину Пкм - убрать из коризны" textAlignment="JUSTIFY" wrapText="true" />
          </children>
       </AnchorPane>
    </children>

@@ -20,12 +20,11 @@ public class Actions {
     private static final String[] mobFightMenuTextItems = new String[]{"Обычная атака","Атака ломом","Отступить"};
     private static final String[] shopMenuTextItems = new String[]{"Купить предмет","Продать предмет","Уйти"};
     private static TextField moveField;
-    private static StringProperty mobStats;
+    private static StringProperty mobStats, playerStats;
     private static Player player1;
     private static Mob mob;
-    private static Gamelogs playerLogs;
-    private static Gamelogs gamelogs;
-    private static Label lomQuantityLbl;
+    private static Gamelogs playerLogs, gamelogs;
+    private static Label lomCostLbl, shopHintLbl;
     private static int rndLomCost;
 
     public Actions(MainWindowController controller){
@@ -48,12 +47,13 @@ public class Actions {
         allMenuItems.add(controller.getThirdMenuItem());
         moveField = controller.getMoveField();
         mobStats = controller.getMobStats();
+        playerStats = controller.getPlayerStatsProperty();
         player1 = controller.getPlayer();
-        mob = controller.getMob();
+        mob = Mob.getMob();
         gamelogs = controller.getGameLogs();
         playerLogs = controller.getPlayerLogs();
-        lomQuantityLbl = controller.getLomQuantityLbl();
-
+        lomCostLbl = controller.getLomCostLbl();
+        shopHintLbl = controller.getShopHintLbl();
 
     }
 
@@ -72,13 +72,16 @@ public class Actions {
     }
 
     public static void mobFightStart(){
-        controller.updateStats("mob",mob.getName(), mob.getHp(), mob.getDmg(),0);
+        mob = Mob.createMob();
+        System.out.println(mob.getName());
+        updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
         moveField.clear();
         mobAvatar.setImage(controller.getMobImage());
         mobAvatarGame.setVisible(true);
         playerAvatarGame.setVisible(true);
         mobAvatar.setVisible(true);
         setTextMenuItem(allMenuItems,mobFightMenuTextItems);
+
 
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneMobFight());
@@ -90,9 +93,9 @@ public class Actions {
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneShop());
 
-        rndLomCost = randomCost();
+        rndLomCost = RandomNums.randomCost();
         lomAvatarGame.setVisible(true);
-        lomQuantityLbl.setText(String.format("Цена лома: %d", rndLomCost));
+        lomCostLbl.setText(String.format("Цена лома: %d", rndLomCost));
         mobAvatarGame.setVisible(false);
         mobAvatar.setImage(controller.getShopImage());
         mobAvatar.setVisible(true);
@@ -111,7 +114,7 @@ public class Actions {
                     player1.setInventory(el, lomQuantity);
                 }
 
-                controller.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+                updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
                 playerLogs.appendLogs("Предмет куплен\n");
                 playerLogs.appendLogs(player1.getInventory().toString() + "\n");
             }
@@ -126,9 +129,12 @@ public class Actions {
 
     }
 
-    public static int randomCost(){
-        Random rndCost = new Random();
-        return rndCost.nextInt(1,5);
+    public static void updateStats(String object, String name, int hp, int dmg, int money) {
+        if (object.equals("player")) {
+            playerStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d\nДЕНЬГИ: %d", name, hp, dmg, money));
+        } else {
+            mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
+        }
     }
 
     public static void setMove(TextField field, MenuItem menuItem){
@@ -140,8 +146,5 @@ public class Actions {
                 allMenuItems.get(i).setText(text[i]);
             }
         }
-    }
-    public void setPlayer(Player player) {
-        player1 = player;
     }
 }
