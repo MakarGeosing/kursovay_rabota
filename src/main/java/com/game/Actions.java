@@ -49,7 +49,7 @@ public class Actions {
         mobStats = controller.getMobStats();
         playerStats = controller.getPlayerStatsProperty();
         player1 = controller.getPlayer();
-        mob = Mob.getMob();
+        //mob = Mob.createMob();
         gamelogs = controller.getGameLogs();
         playerLogs = controller.getPlayerLogs();
         lomCostLbl = controller.getLomCostLbl();
@@ -135,6 +135,10 @@ public class Actions {
         } else {
             mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
         }
+    }
+
+    public static Mob getMob() {
+        return mob;
     }
 
     public static void setMove(TextField field, MenuItem menuItem){

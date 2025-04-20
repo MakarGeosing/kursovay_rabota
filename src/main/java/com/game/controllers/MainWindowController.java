@@ -41,7 +41,6 @@ public class MainWindowController {
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
-    private Mob mob;
     private final Player player1 = new Player(1,"Makar" ,100, 10, 20);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
@@ -58,7 +57,6 @@ public class MainWindowController {
 
     @FXML
     public void initialize() {
-        mob = Mob.createMob();
         gameLogs = new Gamelogs(gameLogsTA);
         playerLogs = new Gamelogs(playerLogsTA);
         playerAvatar.setImage(playerImage);
@@ -83,7 +81,7 @@ public class MainWindowController {
         {
             playerAvatarGame.setVisible(false);
             mobAvatar.setVisible(false);
-            playerLogs.appendLogs("Вы испугались %s и отступили.\n", mob.getName());
+            playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
             Actions.shopStart();
         }
         else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
@@ -96,10 +94,10 @@ public class MainWindowController {
 
             if((int) player1.getInventory().get("lom") >= 1) {
                 System.out.println(player1.getInventory().get("lom"));
-                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", mob.getName(), (player1.getDmg() * 2));
-                mob.setHp(-(player1.getDmg()*2));
+                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
+                Actions.getMob().setHp(-(player1.getDmg()*2));
                 player1.setInventory("lom",-1);
-                Actions.updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
+                Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
                 System.out.println(player1.getInventory());
             }
             else {
@@ -107,9 +105,9 @@ public class MainWindowController {
             }
         }
         else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
-            mob.setHp(-(player1.getDmg()));
-            gameLogs.appendLogs("Вы нанесли %s %d урона.\n", mob.getName(), player1.getDmg());
-            Actions.updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
+            Actions.getMob().setHp(-(player1.getDmg()));
+            gameLogs.appendLogs("Вы нанесли %s %d урона.\n", Actions.getMob().getName(), player1.getDmg());
+            Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
         }
         else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
             Actions.shopBuy(items);
@@ -177,7 +175,7 @@ public class MainWindowController {
 
     @FXML
     void mobAvatarEntered(MouseEvent event) {
-        mobAvatarLbl.setText(String.format("Это монстр %s", mob.getName()));
+        mobAvatarLbl.setText(String.format("Это монстр %s", Actions.getMob().getName()));
         mobAvatarLbl.setVisible(true);
     }
 

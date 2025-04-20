@@ -2,6 +2,7 @@ package com.game;
 
 import java.util.Random;
 
+
 public class RandomNums {
 
     public static int randomCost(){
@@ -9,8 +10,8 @@ public class RandomNums {
         return rndCost.nextInt(1,5);
     }
 
-    public static int randomNum(){
+    public static int randomNum(int bound){
         Random rndNum = new Random();
-        return rndNum.nextInt(14);
+        return rndNum.nextInt(bound);
     }
 }
