@@ -14,7 +14,7 @@ public class Player {
         this.hp = hp;
         this.dmg = dmg;
         this.money = money;
-        this.inventory.put("lom", 1);
+        this.inventory.put("lom", 1111);
     }
 
 

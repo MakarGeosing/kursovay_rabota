@@ -41,12 +41,11 @@ public class MainWindowController {
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
-    private final Player player1 = new Player(1,"Makar" ,100, 10, 20);
+    private static final Player player1 = new Player(1,"Makar" ,100, 10, 20);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
-    private Gamelogs gameLogs;
-    private Gamelogs playerLogs;
+    private static Gamelogs gameLogs, playerLogs;
     private final Image mobImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/monster.png")).toString());
     private final Image playerImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/player.png")).toString());
     private final Image shopImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/shop.png")).toString());
@@ -70,9 +69,9 @@ public class MainWindowController {
 
         Actions actions = new Actions(this);
         Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+
         Actions.mobFightStart();
     }
-
 
 
     @FXML
@@ -91,23 +90,21 @@ public class MainWindowController {
         }
         else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
         {
-
-            if((int) player1.getInventory().get("lom") >= 1) {
-                System.out.println(player1.getInventory().get("lom"));
-                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
-                Actions.getMob().setHp(-(player1.getDmg()*2));
-                player1.setInventory("lom",-1);
-                Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
-                System.out.println(player1.getInventory());
-            }
-            else {
-                playerLogs.appendLogs("У вас нету лома\n");
-            }
+            Actions.getMob().mobTakeDmg("Ломом", -(getPlayer().getDmg()), Actions.getMob().getHp());
+            //if((int) player1.getInventory().get("lom") >= 1) {
+            //    System.out.println(player1.getInventory().get("lom"));
+            //    gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
+            //    Actions.getMob().setHp(-(player1.getDmg()*2));
+            //    player1.setInventory("lom",-1);
+            //    Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
+            //    System.out.println(player1.getInventory());
+            //}
+            //else {
+            //    playerLogs.appendLogs("У вас нету лома\n");
+            //}
         }
         else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
-            Actions.getMob().setHp(-(player1.getDmg()));
-            gameLogs.appendLogs("Вы нанесли %s %d урона.\n", Actions.getMob().getName(), player1.getDmg());
-            Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
+            Actions.getMob().mobTakeDmg("Обычная", -(getPlayer().getDmg()), Actions.getMob().getHp());
         }
         else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
             Actions.shopBuy(items);
@@ -284,7 +281,7 @@ public class MainWindowController {
     public TextArea getPlayerLogsTA() {
         return playerLogsTA;
     }
-    public Player getPlayer() {
+    public static Player getPlayer() {
         return player1;
     }
     //public Mob getMob() {
@@ -296,10 +293,10 @@ public class MainWindowController {
     public SimpleStringProperty getMobStats() {
         return (SimpleStringProperty) mobStats;
     }
-    public Gamelogs getGameLogs() {
+    public static Gamelogs getGameLogs() {
         return gameLogs;
     }
-    public Gamelogs getPlayerLogs() {
+    public static Gamelogs getPlayerLogs() {
         return playerLogs;
     }
     public Image getMobImage() {

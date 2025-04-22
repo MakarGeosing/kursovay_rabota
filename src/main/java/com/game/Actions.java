@@ -57,20 +57,6 @@ public class Actions {
 
     }
 
-    private static AnchorPane getVisiblePane(List<AnchorPane> panes) {
-        for (AnchorPane pane : panes) {
-            if (pane.isVisible()) {
-                return pane;
-            }
-        }
-        return panes.getFirst();
-    }
-
-    public static void changePane(AnchorPane currentPane, AnchorPane nextPane){
-        currentPane.setVisible(false);
-        nextPane.setVisible(true);
-    }
-
     public static void mobFightStart(){
         mob = Mob.createMob();
         System.out.println(mob.getName());
@@ -85,7 +71,6 @@ public class Actions {
 
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneMobFight());
-
     }
     public static void shopStart(){
         moveField.clear();
@@ -93,16 +78,17 @@ public class Actions {
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneShop());
 
-        rndLomCost = RandomNums.randomCost();
-        lomAvatarGame.setVisible(true);
-        lomCostLbl.setText(String.format("Цена лома: %d", rndLomCost));
+        playerAvatarGame.setVisible(false);
         mobAvatarGame.setVisible(false);
-        mobAvatar.setImage(controller.getShopImage());
+        lomAvatarGame.setVisible(true);
         mobAvatar.setVisible(true);
+        mobAvatar.setImage(controller.getShopImage());
+
+        rndLomCost = RandomNums.randomCost();
+        lomCostLbl.setText(String.format("Цена лома: %d", rndLomCost));
 
         mobStats.set("Магазин");
         gamelogs.appendLogs("Вы встретили магазин\n");
-
     }
     public static void shopBuy(List<String> items){
         if(player1.getMoney() >= (rndLomCost * items.size())){
@@ -129,12 +115,28 @@ public class Actions {
 
     }
 
+
+    public static void rndEvent(){
+
+    }
     public static void updateStats(String object, String name, int hp, int dmg, int money) {
         if (object.equals("player")) {
             playerStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d\nДЕНЬГИ: %d", name, hp, dmg, money));
         } else {
             mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
         }
+    }
+    private static AnchorPane getVisiblePane(List<AnchorPane> panes) {
+        for (AnchorPane pane : panes) {
+            if (pane.isVisible()) {
+                return pane;
+            }
+        }
+        return panes.getFirst();
+    }
+    public static void changePane(AnchorPane currentPane, AnchorPane nextPane){
+        currentPane.setVisible(false);
+        nextPane.setVisible(true);
     }
 
     public static Mob getMob() {

@@ -1,5 +1,7 @@
 package com.game;
 
+import com.game.controllers.MainWindowController;
+
 public class Mob {
     private final int id;
     private int hp, dmg;
@@ -7,7 +9,10 @@ public class Mob {
     private static final String[] allMobNames = new String[]{"Боб", "Джо", "Риппи", "Алекс", "Альберт", "Бакстер",
             "Брендон", "Вилсон", "Хаус", "Джейк", "Кевин",
             "Майкл", "Джозеф"};
-    //private static Mob mob;
+    private final Player player1 = MainWindowController.getPlayer();
+    private final Gamelogs gameLogs = MainWindowController.getGameLogs();
+    private final Gamelogs playerLogs = MainWindowController.getPlayerLogs();
+    //private final Mob mob = Actions.getMob();
 
     public Mob(int id, String name, int hp, int dmg) {
         this.id = id;
@@ -17,17 +22,38 @@ public class Mob {
     }
 
     public static Mob createMob() {
-
-        //Actions.updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(), 0);
         return new Mob(1, getRndMobName(), 100, 10);
     }
-
-    //public static Mob getMob() {
-    //    return mob;
-    //}
     public static String getRndMobName(){
         int index = RandomNums.randomNum(allMobNames.length);
         return allMobNames[index];
+    }
+
+    public void mobTakeDmg(String typeOfAttack, int dmg, int mobHp){
+        if (typeOfAttack.equals("Обычная") && mobHp > 10){
+            Actions.getMob().setHp(dmg);
+            gameLogs.appendLogs("Вы нанесли %s %d урона.\n", Actions.getMob().getName(), player1.getDmg());
+            Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
+        }
+        else if (typeOfAttack.equals("Ломом") && mobHp > 20) {
+            if((int) MainWindowController.getPlayer().getInventory().get("lom") >= 1) {
+                System.out.println(player1.getInventory().get("lom"));
+                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
+                Actions.getMob().setHp(-(player1.getDmg()*2));
+                player1.setInventory("lom",-1);
+                Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
+
+                System.out.println(player1.getInventory());
+            }
+            else {
+                playerLogs.appendLogs("У вас нету лома\n");
+            }
+            
+        }
+        else {
+            System.out.println("mob dead");
+            Actions.shopStart();
+        }
     }
 
     public static String[] getAllMobNames(){
