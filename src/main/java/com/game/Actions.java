@@ -1,6 +1,7 @@
 package com.game;
 
 import com.game.controllers.MainWindowController;
+import eu.hansolo.tilesfx.addons.Switch;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -24,8 +25,8 @@ public class Actions {
     private static Player player1;
     private static Mob mob;
     private static Gamelogs playerLogs, gamelogs;
-    private static Label lomCostLbl, shopHintLbl;
-    private static int rndLomCost;
+    private static Label lomCostLbl, hpPotionCostLbl;
+    private static int rndLomCost, rndHpPotionCost;
 
     public Actions(MainWindowController controller){
         Actions.controller = controller;
@@ -49,11 +50,11 @@ public class Actions {
         mobStats = controller.getMobStats();
         playerStats = controller.getPlayerStatsProperty();
         player1 = controller.getPlayer();
-        //mob = Mob.createMob();
         gamelogs = controller.getGameLogs();
         playerLogs = controller.getPlayerLogs();
         lomCostLbl = controller.getLomCostLbl();
-        shopHintLbl = controller.getShopHintLbl();
+        hpPotionCostLbl = controller.getHpPotionCostLbl();
+
 
     }
 
@@ -85,38 +86,57 @@ public class Actions {
         mobAvatar.setImage(controller.getShopImage());
 
         rndLomCost = RandomNums.randomCost();
+        rndHpPotionCost = RandomNums.randomCost();
         lomCostLbl.setText(String.format("Цена лома: %d", rndLomCost));
+        hpPotionCostLbl.setText(String.format("Цена Зелья здоровья: %d", rndHpPotionCost));
 
         mobStats.set("Магазин");
         gamelogs.appendLogs("Вы встретили магазин\n");
     }
-    public static void shopBuy(List<String> items){
-        if(player1.getMoney() >= (rndLomCost * items.size())){
-            player1.setMoney(player1.getMoney() - (rndLomCost * items.size()));
-            for(String el: items){
-                if(el.equals("lom")){
-                    int lomQuantity = 0;
-                    lomQuantity++;
-                    player1.setInventory(el, lomQuantity);
-                }
+    public static void shopBuy(List<String> items) {
+        if(items.isEmpty()){
+            gamelogs.appendLogs("Корзина пуста\n");
+            return;
+        }
+        int lomCount = (int) items.stream().filter(item -> item.equals("lom")).count();
+        int hpPotionCount = (int) items.stream().filter(item -> item.equals("hpPotion")).count();
 
-                updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
-                playerLogs.appendLogs("Предмет куплен\n");
-                playerLogs.appendLogs(player1.getInventory().toString() + "\n");
-            }
+        int totalCost = (lomCount * rndLomCost) + (hpPotionCount * rndHpPotionCost);
+
+        if(player1.getMoney() < totalCost){
+            playerLogs.appendLogs("Недостаточно средств\n");
+            items.clear();
+            controller.setCarts(0);
+            gamelogs.appendLogs("Корзина очистилась\n");
+            return;
         }
-        else
-        {
-            playerLogs.appendLogs("У вас недостаточно средств\n");
+
+        player1.setMoney(player1.getMoney() - totalCost);
+
+        if (lomCount > 0) {
+            player1.setInventory("lom", lomCount);
         }
-        controller.setCart(0);
-        gamelogs.appendLogs("Корзина очистилась\n");
+        if (hpPotionCount > 0) {
+            player1.setInventory("hpPotion", hpPotionCount);
+        }
+
+        updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+        playerLogs.appendLogs("Предметы куплены\n");
+        playerLogs.appendLogs(player1.getInventory().toString() + "\n");
+        controller.setCarts(0);
+        gamelogs.appendLogs("Корзина пуста\n");
         items.clear();
-
     }
 
 
     public static void rndEvent(){
+        int rnd = RandomNums.randomNum(2);
+        System.out.println(rnd);
+        switch (rnd){
+            case 0: Actions.mobFightStart(); break;
+            case 1: Actions.shopStart(); break;
+        }
+
 
     }
     public static void updateStats(String object, String name, int hp, int dmg, int money) {

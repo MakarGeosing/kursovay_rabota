@@ -37,7 +37,7 @@ public class MainWindowController {
     @FXML
     private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame;
     @FXML
-    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, shopHintLbl;
+    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, hpPotionCostLbl;
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
@@ -52,7 +52,7 @@ public class MainWindowController {
     private final Image LomImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/lom.png")).toString());
     private String prevGameLogsText = "", prevPlayerLogsText = "";
     private final List<String> items = new ArrayList<String>();
-    private int cart;
+    private int lomCart, hpPotionCart;
 
     @FXML
     public void initialize() {
@@ -70,7 +70,7 @@ public class MainWindowController {
         Actions actions = new Actions(this);
         Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
 
-        Actions.mobFightStart();
+        Actions.rndEvent();
     }
 
 
@@ -81,12 +81,12 @@ public class MainWindowController {
             playerAvatarGame.setVisible(false);
             mobAvatar.setVisible(false);
             playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
-            Actions.shopStart();
+            Actions.rndEvent();
         }
         else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
         {
             playerLogs.appendLogs("Вы ушли.\n");
-            Actions.mobFightStart();
+            Actions.rndEvent();
         }
         else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
         {
@@ -140,25 +140,52 @@ public class MainWindowController {
     @FXML
     public void lomClicked(MouseEvent mouseEvent) throws InterruptedException {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-            cart += 1;
+            lomCart += 1;
             playerLogs.appendLogs("Лом добавлен в корзину\n");
             gameLogs.appendLogs("""
                     Корзина: Лом %d
-                    """, cart);
+                    """, lomCart);
             items.add("lom");
 
         }
         else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
             if (!items.isEmpty()){
-                cart -= 1;
+                lomCart -= 1;
                 items.removeLast();
                 playerLogs.appendLogs("Последний предмет удалён из корзины\n");
                 gameLogs.appendLogs("""
                     Корзина: Лом %d
-                    """, cart);
+                    """, lomCart);
             }
             else {
-                cart = 0;
+                lomCart = 0;
+                playerLogs.appendLogs("Корзина пуста\n");
+            }
+
+        }
+    }
+    @FXML
+    public void hpPotionClicked(MouseEvent mouseEvent) throws InterruptedException {
+        if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+            hpPotionCart += 1;
+            playerLogs.appendLogs("Зелье здоровья добавлено в корзину\n");
+            gameLogs.appendLogs("""
+                    Корзина: Зелье здоровья %d
+                    """, hpPotionCart);
+            items.add("hpPotion");
+
+        }
+        else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+            if (!items.isEmpty()){
+                hpPotionCart -= 1;
+                items.removeLast();
+                playerLogs.appendLogs("Последний предмет удалён из корзины\n");
+                gameLogs.appendLogs("""
+                    Корзина: Зелье здоровья %d
+                    """, hpPotionCart);
+            }
+            else {
+                hpPotionCart = 0;
                 playerLogs.appendLogs("Корзина пуста\n");
             }
 
@@ -320,12 +347,13 @@ public class MainWindowController {
     public StringProperty getPlayerStatsProperty() {
         return playerStats;
     }
-    public Label getShopHintLbl() {
-        return shopHintLbl;
+    public Label getHpPotionCostLbl() {
+        return hpPotionCostLbl;
     }
 
-    public void setCart(int value) {
-        cart = value;
+    public void setCarts(int value) {
+        lomCart = value;
+        hpPotionCart = value;
     }
     public void setPlayerLogsTA(TextArea playerLogsTA) {
         this.playerLogsTA = playerLogsTA;

@@ -51,8 +51,12 @@ public class Mob {
             
         }
         else {
-            System.out.println("mob dead");
-            Actions.shopStart();
+            int rndMoney = RandomNums.randomNum(10) + 1;
+            player1.setMoney(player1.getMoney() + rndMoney);
+            gameLogs.appendLogs("Монстр %s умер\n", Actions.getMob().getName());
+            playerLogs.appendLogs("Получено: %d денег\n", rndMoney);
+            Actions.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+            Actions.rndEvent();
         }
     }
 
