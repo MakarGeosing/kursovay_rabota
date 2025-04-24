@@ -39,9 +39,26 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-          <Tab text="Инвентарь">
+          <Tab onSelectionChanged="#invTabSelected" text="Инвентарь">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane fx:id="inventoryPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fx:id="lomImageViewInventory" fitHeight="63.0" fitWidth="57.0" layoutX="14.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@lom.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lomQuantityLbl" layoutX="44.0" layoutY="48.0" prefHeight="17.0" prefWidth="26.0" text="\%lomQuantity" />
+                        <ImageView fx:id="hpPotionImageViewInventory" fitHeight="63.0" fitWidth="57.0" layoutX="86.0" layoutY="8.0" onMouseClicked="#hpPotionInventoryClicked" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@hpPotion.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                        <Label fx:id="hpPotionQuantityLbl" layoutX="127.0" layoutY="51.0" prefHeight="17.0" prefWidth="27.0" text="\%hpPotionQuantity" />
+                     </children></AnchorPane>
             </content>
           </Tab>
             <Tab text="Настройки">
@@ -85,8 +102,6 @@
       </AnchorPane>
       <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
       <AnchorPane fx:id="mainPaneBlank" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false" />
-      <ImageView fx:id="playerAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="154.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="422.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
       <AnchorPane fx:id="mainPaneMobFight" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
             <ImageView fx:id="mobAvatarGame3" fitHeight="128.0" fitWidth="118.0" layoutX="253.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
@@ -96,7 +111,7 @@
       </AnchorPane>
       <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0">
          <children>
-            <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomClicked" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomShopClicked" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@lom.png" />
                </image>
@@ -104,7 +119,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="hpPotionAvatarGame" fitHeight="86.0" fitWidth="85.0" layoutX="263.0" layoutY="104.0" onMouseClicked="#hpPotionClicked" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="hpPotionAvatarGame" fitHeight="86.0" fitWidth="85.0" layoutX="263.0" layoutY="104.0" onMouseClicked="#hpPotionShopClicked" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@hpPotion.png" />
                </image>
@@ -117,5 +132,7 @@
             <Label fx:id="shopHintLbl" layoutX="229.0" layoutY="327.0" prefHeight="39.0" prefWidth="147.0" text="Лкм - Добавить в корзину Пкм - убрать из коризны" textAlignment="JUSTIFY" wrapText="true" />
          </children>
       </AnchorPane>
+      <ImageView fx:id="playerAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="154.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="422.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

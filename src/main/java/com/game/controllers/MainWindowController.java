@@ -8,11 +8,11 @@ import java.util.ResourceBundle;
 
 import com.game.Actions;
 import com.game.Gamelogs;
-import com.game.Mob;
 import com.game.Player;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -35,13 +35,14 @@ public class MainWindowController {
     @FXML
     private TextArea gameLogsTA, playerLogsTA, playerStatsTA, mobStatsTA;
     @FXML
-    private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame;
+    private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame, lomImageViewInventory,
+            hpPotionViewInventory;
     @FXML
-    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, hpPotionCostLbl;
+    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, hpPotionCostLbl, lomQuantityLbl, hpPotionQuantityLbl;
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
-    private static final Player player1 = new Player(1,"Makar" ,100, 10, 20);
+    private static final Player player1 = new Player(1,"Makar",100,10,20);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
@@ -81,27 +82,18 @@ public class MainWindowController {
             playerAvatarGame.setVisible(false);
             mobAvatar.setVisible(false);
             playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
+            Actions.getMob().mobAttack();
             Actions.rndEvent();
         }
         else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
         {
             playerLogs.appendLogs("Вы ушли.\n");
+            setCarts(0);
             Actions.rndEvent();
         }
         else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
         {
             Actions.getMob().mobTakeDmg("Ломом", -(getPlayer().getDmg()), Actions.getMob().getHp());
-            //if((int) player1.getInventory().get("lom") >= 1) {
-            //    System.out.println(player1.getInventory().get("lom"));
-            //    gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
-            //    Actions.getMob().setHp(-(player1.getDmg()*2));
-            //    player1.setInventory("lom",-1);
-            //    Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
-            //    System.out.println(player1.getInventory());
-            //}
-            //else {
-            //    playerLogs.appendLogs("У вас нету лома\n");
-            //}
         }
         else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
             Actions.getMob().mobTakeDmg("Обычная", -(getPlayer().getDmg()), Actions.getMob().getHp());
@@ -138,7 +130,7 @@ public class MainWindowController {
     }
 
     @FXML
-    public void lomClicked(MouseEvent mouseEvent) throws InterruptedException {
+    public void lomShopClicked(MouseEvent mouseEvent) throws InterruptedException {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             lomCart += 1;
             playerLogs.appendLogs("Лом добавлен в корзину\n");
@@ -165,7 +157,7 @@ public class MainWindowController {
         }
     }
     @FXML
-    public void hpPotionClicked(MouseEvent mouseEvent) throws InterruptedException {
+    public void hpPotionShopClicked(MouseEvent mouseEvent) throws InterruptedException {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             hpPotionCart += 1;
             playerLogs.appendLogs("Зелье здоровья добавлено в корзину\n");
@@ -189,6 +181,25 @@ public class MainWindowController {
                 playerLogs.appendLogs("Корзина пуста\n");
             }
 
+        }
+    }
+    @FXML
+    public void hpPotionInventoryClicked(MouseEvent mouseEvent) {
+        if(player1.getHp() < 100){
+            if (player1.getInventoryValue("hpPotion") > 0){
+                player1.setInventory("hpPotion", -1);
+                player1.setHp(100);
+                playerLogs.appendLogs("Вы выпили зелье здоровья и восстановили здоровье.\n");
+                Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+                player1.invUpdate();
+            }
+            else
+            {
+                playerLogs.appendLogs("У вас нет зелья здоровья.\n");
+            }
+        }
+        else {
+            playerLogs.appendLogs("У вас уже максимум здоровья.\n");
         }
     }
 
@@ -247,7 +258,10 @@ public class MainWindowController {
             playerLogs.setLogs(prevPlayerLogsText);
         }
     }
-
+    @FXML
+    public void invTabSelected(Event event) {
+        player1.invUpdate();
+    }
     @FXML
     public void exitBtnAction(ActionEvent actionEvent) {
         javafx.application.Platform.exit();
@@ -311,9 +325,6 @@ public class MainWindowController {
     public static Player getPlayer() {
         return player1;
     }
-    //public Mob getMob() {
-    //    return mob;
-    //}
     public Image getShopImage() {
         return shopImage;
     }
@@ -350,6 +361,12 @@ public class MainWindowController {
     public Label getHpPotionCostLbl() {
         return hpPotionCostLbl;
     }
+    public Label getHpPotionQuantityLbl() {
+        return hpPotionQuantityLbl;
+    }
+    public Label getLomQuantityLbl() {
+        return lomQuantityLbl;
+    }
 
     public void setCarts(int value) {
         lomCart = value;
@@ -358,7 +375,6 @@ public class MainWindowController {
     public void setPlayerLogsTA(TextArea playerLogsTA) {
         this.playerLogsTA = playerLogsTA;
     }
-
 
 }
 
