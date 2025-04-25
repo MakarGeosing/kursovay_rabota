@@ -100,16 +100,13 @@
             </SplitMenuButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
       <AnchorPane fx:id="mainPaneBlank" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false" />
       <AnchorPane fx:id="mainPaneMobFight" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
             <ImageView fx:id="mobAvatarGame3" fitHeight="128.0" fitWidth="118.0" layoutX="253.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="playerAvatarLbl" layoutX="40.0" layoutY="82.0" text="Это вы" visible="false" />
-            <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="269.0" layoutY="63.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" visible="false" wrapText="true" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0">
+      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
             <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomShopClicked" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -132,6 +129,9 @@
             <Label fx:id="shopHintLbl" layoutX="229.0" layoutY="327.0" prefHeight="39.0" prefWidth="147.0" text="Лкм - Добавить в корзину Пкм - убрать из коризны" textAlignment="JUSTIFY" wrapText="true" />
          </children>
       </AnchorPane>
+      <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
+      <Label fx:id="playerAvatarLbl" layoutX="191.0" layoutY="79.0" text="Это вы" visible="false" />
+      <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="413.0" layoutY="69.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" visible="false" wrapText="true" />
       <ImageView fx:id="playerAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="154.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="422.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
    </children>

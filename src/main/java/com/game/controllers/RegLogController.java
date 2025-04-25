@@ -105,7 +105,13 @@ public class RegLogController {
     }
 
     public static void showAlert(Alert.AlertType alertType, String msg){
-        Alert alert = new Alert(alertType,  msg );
+        Alert alert = new Alert(alertType,  msg);
+        alert.showAndWait();
+    }
+    public static void showAlert(Alert.AlertType alertType, String msg, String title, String header){
+        Alert alert = new Alert(alertType,  msg);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
         alert.showAndWait();
     }
 

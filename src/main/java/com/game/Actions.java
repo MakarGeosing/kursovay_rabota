@@ -22,6 +22,7 @@ public class Actions {
     private static final List<MenuItem> allMenuItems = new ArrayList<MenuItem>();
     private static final String[] mobFightMenuTextItems = new String[]{"Обычная атака","Атака ломом","Отступить"};
     private static final String[] shopMenuTextItems = new String[]{"Купить предмет","Продать предмет","Уйти"};
+    private static final String[] quest1TextItems = new String[]{"Привет","Кто ты?","Что тебе надо?"};
     private static TextField moveField;
     private static StringProperty mobStats, playerStats;
     private static Player player1;
@@ -73,7 +74,6 @@ public class Actions {
         playerAvatarGame.setVisible(true);
         mobAvatar.setVisible(true);
         setTextMenuItem(allMenuItems,mobFightMenuTextItems);
-
 
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneMobFight());
@@ -131,13 +131,28 @@ public class Actions {
         gamelogs.appendLogs("Корзина пуста\n");
         items.clear();
     }
+    public static void quest1Start(){
+        moveField.clear();
+        updateStats("Char", "Чурбек", 0, 0,0);
+        mobAvatar.setImage(controller.getQuestCharImage());
+        mobAvatar.setVisible(true);
+        mobAvatarGame.setVisible(true);
+        playerAvatarGame.setVisible(true);
+        setTextMenuItem(allMenuItems, quest1TextItems);
+
+        gamelogs.appendLogs("Вы встретели Чурбека\nЧурбек: Приветсвую тебя путник! Этому миру пизда!\n");
+
+        AnchorPane currentMainPane = getVisiblePane(allMainPanes);
+        changePane(currentMainPane, controller.getMainPaneQuest1());
+    }
 
 
     public static void rndEvent(){
-        int rnd = RandomNums.randomNum(2);
+        int rnd = RandomNums.randomNum(3);
         switch (rnd){
             case 0: Actions.mobFightStart(); break;
             case 1: Actions.shopStart(); break;
+            case 2: Actions.quest1Start(); break;
         }
 
 
@@ -145,13 +160,18 @@ public class Actions {
     public static void updateStats(String object, String name, int hp, int dmg, int money) {
         if (object.equals("player")) {
             if (player1.getHp() <= 0){
-                RegLogController.showAlert(Alert.AlertType.ERROR, "Вы погибли\n");
+                RegLogController.showAlert(Alert.AlertType.CONFIRMATION, "Вы погибли\n", "Смерть","Смерть");
                 javafx.application.Platform.exit();
             }
             playerStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d\nДЕНЬГИ: %d", name, hp, dmg, money));
         }
-        else {
+        else if (object.equals("mob"))
+        {
             mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
+        }
+        else
+        {
+            mobStats.set(String.format("ИМЯ: %s\n", name));
         }
 
     }
