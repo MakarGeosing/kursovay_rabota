@@ -12,7 +12,6 @@ public class Mob {
     private final Player player1 = MainWindowController.getPlayer();
     private final Gamelogs gameLogs = MainWindowController.getGameLogs();
     private final Gamelogs playerLogs = MainWindowController.getPlayerLogs();
-    //private final Mob mob = Actions.getMob();
 
     public Mob(int id, String name, int hp, int dmg) {
         this.id = id;
@@ -22,7 +21,7 @@ public class Mob {
     }
 
     public static Mob createMob() {
-        return new Mob(1, getRndMobName(), 100, 10);
+        return new Mob(1, getRndMobName(), 100, RandomNums.rndDmg());
     }
     public static String getRndMobName(){
         int index = RandomNums.randomNum(allMobNames.length);
@@ -34,16 +33,16 @@ public class Mob {
             Actions.getMob().setHp(dmg);
             gameLogs.appendLogs("Вы нанесли %s %d урона.\n", Actions.getMob().getName(), player1.getDmg());
             Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
+            mobAttack();
+
         }
         else if (typeOfAttack.equals("Ломом") && mobHp > 20) {
             if((int) MainWindowController.getPlayer().getInventory().get("lom") >= 1) {
-                System.out.println(player1.getInventory().get("lom"));
-                gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
+                gameLogs.appendLogs("Вы оглушили и ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
                 Actions.getMob().setHp(-(player1.getDmg()*2));
                 player1.setInventory("lom",-1);
                 Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
 
-                System.out.println(player1.getInventory());
             }
             else {
                 playerLogs.appendLogs("У вас нету лома\n");
@@ -51,7 +50,7 @@ public class Mob {
             
         }
         else {
-            int rndMoney = RandomNums.randomNum(10) + 1;
+            int rndMoney = RandomNums.randomNum(10) + 6;
             player1.setMoney(player1.getMoney() + rndMoney);
             gameLogs.appendLogs("Монстр %s умер\n", Actions.getMob().getName());
             playerLogs.appendLogs("Получено: %d денег\n", rndMoney);
@@ -59,6 +58,12 @@ public class Mob {
             Actions.rndEvent();
         }
     }
+    public void mobAttack(){
+        player1.setHp(player1.getHp() - this.dmg);
+        playerLogs.appendLogs("Монстр нанес вам %d урона\n", this.dmg);
+        Actions.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+    }
+
 
     public static String[] getAllMobNames(){
         return allMobNames;

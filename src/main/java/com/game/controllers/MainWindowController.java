@@ -8,11 +8,11 @@ import java.util.ResourceBundle;
 
 import com.game.Actions;
 import com.game.Gamelogs;
-import com.game.Mob;
 import com.game.Player;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -35,13 +35,14 @@ public class MainWindowController {
     @FXML
     private TextArea gameLogsTA, playerLogsTA, playerStatsTA, mobStatsTA;
     @FXML
-    private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame;
+    private ImageView mobAvatarGame, playerAvatar, playerAvatarGame, mobAvatar, lomAvatarGame, lomImageViewInventory,
+            hpPotionViewInventory;
     @FXML
-    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, hpPotionCostLbl;
+    private Label playerAvatarLbl, mobAvatarLbl, lomCostLbl, hpPotionCostLbl, lomQuantityLbl, hpPotionQuantityLbl;
     @FXML
     private AnchorPane mainPaneMobFight, actionsPane, mainPaneShop, mainPaneBlank, actionsPaneBlank, mainPaneQuest1;
 
-    private static final Player player1 = new Player(1,"Makar" ,100, 10, 20);
+    private static final Player player1 = new Player(1,"Makar",100,10,20);
     private final StringProperty playerStats = new SimpleStringProperty();
     private final StringProperty mobStats = new SimpleStringProperty();
     private final StringProperty mobName = new SimpleStringProperty();
@@ -50,6 +51,7 @@ public class MainWindowController {
     private final Image playerImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/player.png")).toString());
     private final Image shopImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/shop.png")).toString());
     private final Image LomImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/lom.png")).toString());
+    private final Image quest1CharImage = new Image(Objects.requireNonNull(getClass().getResource("/com/game/monster2.png")).toString());
     private String prevGameLogsText = "", prevPlayerLogsText = "";
     private final List<String> items = new ArrayList<String>();
     private int lomCart, hpPotionCart;
@@ -64,6 +66,8 @@ public class MainWindowController {
         mobStatsTA.textProperty().bind(mobStats);
         mobAvatarGame.imageProperty().bind(mobAvatar.imageProperty());
         playerAvatarGame.imageProperty().bind(playerAvatar.imageProperty());
+        //playerAvatarLbl.visibleProperty().bind(playerAvatarGame.visibleProperty());
+        //mobAvatarLbl.visibleProperty().bind(mobAvatarGame.visibleProperty());
 
         mobStatsTA.visibleProperty().bind(mobAvatar.visibleProperty());
 
@@ -73,54 +77,132 @@ public class MainWindowController {
         Actions.rndEvent();
     }
 
-
     @FXML
     public void submitMenuAction(ActionEvent actionEvent) {
-        if (getMoveFieldText().equals("Отступить") && mainPaneMobFight.isVisible())
-        {
-            playerAvatarGame.setVisible(false);
-            mobAvatar.setVisible(false);
-            playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
-            Actions.rndEvent();
+        //if (getMoveFieldText().equals("Отступить") && mainPaneMobFight.isVisible())
+        //{
+        //    playerAvatarGame.setVisible(false);
+        //    mobAvatar.setVisible(false);
+        //    playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
+        //    Actions.getMob().mobAttack();
+        //    Actions.rndEvent();
+        //}
+        //else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
+        //{
+        //    playerLogs.appendLogs("Вы ушли.\n");
+        //    setCarts(0);
+        //    Actions.rndEvent();
+        //}
+        //else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
+        //{
+        //    Actions.getMob().mobTakeDmg("Ломом", -(getPlayer().getDmg()), Actions.getMob().getHp());
+        //}
+        //else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
+        //    Actions.getMob().mobTakeDmg("Обычная", -(getPlayer().getDmg()), Actions.getMob().getHp());
+        //}
+        //else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
+        //    Actions.shopBuy(items);
+        //
+        //}
+        //else if (getMoveFieldText().equals("Продать предмет") && mainPaneShop.isVisible()) {
+        //    playerLogs.appendLogs("Предмет продан\n");
+        //}
+        //else {
+        //    RegLogController.showAlert(Alert.AlertType.ERROR, """
+        //            Введено неверное действие
+        //            Подсказка: Вы можете нажать на стрелочку справа от кнопки "Подвердить ход" и узнать все доступные на
+        //            данный момент действия
+        //            """);
+        //}
+
+        String move = getMoveFieldText();
+        if (mainPaneMobFight.isVisible()) {
+            handleMobFight(move);
         }
-        else if(getMoveFieldText().equals("Уйти") && mainPaneShop.isVisible())
-        {
-            playerLogs.appendLogs("Вы ушли.\n");
-            Actions.rndEvent();
+        else if (mainPaneShop.isVisible()) {
+            handleShop(move);
         }
-        else if (getMoveFieldText().equals("Атака ломом") && mainPaneMobFight.isVisible())
-        {
-            Actions.getMob().mobTakeDmg("Ломом", -(getPlayer().getDmg()), Actions.getMob().getHp());
-            //if((int) player1.getInventory().get("lom") >= 1) {
-            //    System.out.println(player1.getInventory().get("lom"));
-            //    gameLogs.appendLogs("Вы ударили %s ломом на %d.\n", Actions.getMob().getName(), (player1.getDmg() * 2));
-            //    Actions.getMob().setHp(-(player1.getDmg()*2));
-            //    player1.setInventory("lom",-1);
-            //    Actions.updateStats("mob", Actions.getMob().getName(), Actions.getMob().getHp(), Actions.getMob().getDmg(),0);
-            //    System.out.println(player1.getInventory());
-            //}
-            //else {
-            //    playerLogs.appendLogs("У вас нету лома\n");
-            //}
-        }
-        else if (getMoveFieldText().equals("Обычная атака") && mainPaneMobFight.isVisible()) {
-            Actions.getMob().mobTakeDmg("Обычная", -(getPlayer().getDmg()), Actions.getMob().getHp());
-        }
-        else if (getMoveFieldText().equals("Купить предмет") && mainPaneShop.isVisible()) {
-            Actions.shopBuy(items);
+        else if (mainPaneQuest1.isVisible()) {
+            handleQuest1(move);
 
         }
-        else if (getMoveFieldText().equals("Продать предмет") && mainPaneShop.isVisible()) {
-            playerLogs.appendLogs("Предмет продан\n");
-        }
         else {
-            RegLogController.showAlert(Alert.AlertType.ERROR, """
-                    Введено неверное действие
-                    Подсказка: Вы можете нажать на стрелочку справа от кнопки "Подвердить ход" и узнать все доступные на
-                    данный момент действия
-                    """);
+            showInvalidMoveError();
         }
     }
+    private void handleMobFight(String move) {
+        switch (move) {
+            case "Отступить":
+                playerAvatarGame.setVisible(false);
+                mobAvatar.setVisible(false);
+                playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
+                Actions.getMob().mobAttack();
+                Actions.rndEvent();
+                break;
+            case "Атака ломом":
+                Actions.getMob().mobTakeDmg("Ломом", -(getPlayer().getDmg()), Actions.getMob().getHp());
+                break;
+            case "Обычная атака":
+                Actions.getMob().mobTakeDmg("Обычная", -(getPlayer().getDmg()), Actions.getMob().getHp());
+                break;
+            default:
+                showInvalidMoveError();
+        }
+    }
+    private void handleShop(String move) {
+        switch (move) {
+            case "Уйти":
+                playerLogs.appendLogs("Вы ушли.\n");
+                setCarts(0);
+                Actions.rndEvent();
+                break;
+            case "Купить предмет":
+                Actions.shopBuy(items);
+                break;
+            case "Продать предмет":
+                playerLogs.appendLogs("Предмет продан\n");
+                break;
+            default:
+                showInvalidMoveError();
+        }
+    }
+    private void handleQuest1(String move){
+        switch (move){
+            case "Привет":{
+                playerLogs.appendLogs("%s: Привет\n", player1.getName());
+                gameLogs.appendLogs("Чурбек: Зря ты пришёл сюда....\n");
+                break;
+            }
+            case "Кто ты?": {
+                playerLogs.appendLogs("%s: Что кто?\n", player1.getName());
+                gameLogs.appendLogs("Чурбек: я странствующий педофил.\n");
+                break;
+            }
+            case "Что тебе надо?": {
+                playerLogs.appendLogs("%s: Что тебе надо?\n", player1.getName());
+                gameLogs.appendLogs("Чурбек: я хочу тебя трахнуть.....\n");
+                player1.setHp(player1.getHp() - 25);
+                Actions.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+                playerLogs.appendLogs("Вас трахнули на 25 урона.......\n");
+                break;
+            }
+            case "Уйти": {
+                playerLogs.appendLogs("Вы ушли\n");
+                Actions.rndEvent();
+                break;
+            }
+            default:{
+                showInvalidMoveError();}
+        }
+    }
+    private void showInvalidMoveError() {
+        RegLogController.showAlert(Alert.AlertType.ERROR, """
+        Введено неверное действие
+        Подсказка: Вы можете нажать на стрелочку справа от кнопки "Подтвердить ход" и узнать все доступные на
+        данный момент действия
+        """);
+    }
+
 
     @FXML
     public void firstMenuItemAction(ActionEvent actionEvent) {
@@ -138,7 +220,7 @@ public class MainWindowController {
     }
 
     @FXML
-    public void lomClicked(MouseEvent mouseEvent) throws InterruptedException {
+    public void lomShopClicked(MouseEvent mouseEvent) throws InterruptedException {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             lomCart += 1;
             playerLogs.appendLogs("Лом добавлен в корзину\n");
@@ -165,7 +247,7 @@ public class MainWindowController {
         }
     }
     @FXML
-    public void hpPotionClicked(MouseEvent mouseEvent) throws InterruptedException {
+    public void hpPotionShopClicked(MouseEvent mouseEvent) throws InterruptedException {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             hpPotionCart += 1;
             playerLogs.appendLogs("Зелье здоровья добавлено в корзину\n");
@@ -191,6 +273,25 @@ public class MainWindowController {
 
         }
     }
+    @FXML
+    public void hpPotionInventoryClicked(MouseEvent mouseEvent) {
+        if(player1.getHp() < 100){
+            if (player1.getInventoryValue("hpPotion") > 0){
+                player1.setInventory("hpPotion", -1);
+                player1.setHp(100);
+                playerLogs.appendLogs("Вы выпили зелье здоровья и восстановили здоровье.\n");
+                Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
+                player1.invUpdate();
+            }
+            else
+            {
+                playerLogs.appendLogs("У вас нет зелья здоровья.\n");
+            }
+        }
+        else {
+            playerLogs.appendLogs("У вас уже максимум здоровья.\n");
+        }
+    }
 
     @FXML
     void playerAvatarEntered(MouseEvent event) {
@@ -199,8 +300,15 @@ public class MainWindowController {
 
     @FXML
     void mobAvatarEntered(MouseEvent event) {
-        mobAvatarLbl.setText(String.format("Это монстр %s", Actions.getMob().getName()));
-        mobAvatarLbl.setVisible(true);
+        if(mainPaneMobFight.isVisible()){
+            mobAvatarLbl.setText(String.format("Это монстр %s", Actions.getMob().getName()));
+            mobAvatarLbl.setVisible(true);
+        }
+        else
+        {
+            mobAvatarLbl.setText("Это чурбек");
+            mobAvatarLbl.setVisible(true);
+        }
     }
 
     @FXML
@@ -247,7 +355,10 @@ public class MainWindowController {
             playerLogs.setLogs(prevPlayerLogsText);
         }
     }
-
+    @FXML
+    public void invTabSelected(Event event) {
+        player1.invUpdate();
+    }
     @FXML
     public void exitBtnAction(ActionEvent actionEvent) {
         javafx.application.Platform.exit();
@@ -311,11 +422,11 @@ public class MainWindowController {
     public static Player getPlayer() {
         return player1;
     }
-    //public Mob getMob() {
-    //    return mob;
-    //}
     public Image getShopImage() {
         return shopImage;
+    }
+    public Image getQuestCharImage() {
+        return quest1CharImage;
     }
     public SimpleStringProperty getMobStats() {
         return (SimpleStringProperty) mobStats;
@@ -350,6 +461,12 @@ public class MainWindowController {
     public Label getHpPotionCostLbl() {
         return hpPotionCostLbl;
     }
+    public Label getHpPotionQuantityLbl() {
+        return hpPotionQuantityLbl;
+    }
+    public Label getLomQuantityLbl() {
+        return lomQuantityLbl;
+    }
 
     public void setCarts(int value) {
         lomCart = value;
@@ -358,7 +475,6 @@ public class MainWindowController {
     public void setPlayerLogsTA(TextArea playerLogsTA) {
         this.playerLogsTA = playerLogsTA;
     }
-
 
 }
 

@@ -1,5 +1,7 @@
 package com.game;
 
+import com.game.controllers.MainWindowController;
+
 import java.util.HashMap;
 
 public class Player {
@@ -18,6 +20,10 @@ public class Player {
         this.inventory.put("hpPotion", 0);
     }
 
+    public void invUpdate(){
+        Actions.getLomQuantityLbl().setText(String.valueOf(this.inventory.get("lom")));
+        Actions.getHpPotionQuantityLbl().setText(String.valueOf(this.inventory.get("hpPotion")));
+    }
 
 
 
@@ -51,7 +57,7 @@ public class Player {
 
 
     public void setHp(int hp) {
-        this.hp += hp;
+        this.hp = hp;
     }
     public void setInventory(String item, int value) {
         if (!inventory.containsKey(item)) {

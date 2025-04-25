@@ -1,8 +1,10 @@
 package com.game;
 
 import com.game.controllers.MainWindowController;
+import com.game.controllers.RegLogController;
 import eu.hansolo.tilesfx.addons.Switch;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -20,13 +22,16 @@ public class Actions {
     private static final List<MenuItem> allMenuItems = new ArrayList<MenuItem>();
     private static final String[] mobFightMenuTextItems = new String[]{"Обычная атака","Атака ломом","Отступить"};
     private static final String[] shopMenuTextItems = new String[]{"Купить предмет","Продать предмет","Уйти"};
+    private static final String[] quest1TextItems = new String[]{"Привет","Кто ты?","Что тебе надо?"};
     private static TextField moveField;
     private static StringProperty mobStats, playerStats;
     private static Player player1;
     private static Mob mob;
     private static Gamelogs playerLogs, gamelogs;
-    private static Label lomCostLbl, hpPotionCostLbl;
+    private static Label lomCostLbl, hpPotionCostLbl, lomQuantityLbl, hpPotionQuantityLbl;
     private static int rndLomCost, rndHpPotionCost;
+
+
 
     public Actions(MainWindowController controller){
         Actions.controller = controller;
@@ -54,13 +59,14 @@ public class Actions {
         playerLogs = controller.getPlayerLogs();
         lomCostLbl = controller.getLomCostLbl();
         hpPotionCostLbl = controller.getHpPotionCostLbl();
+        lomQuantityLbl = controller.getLomQuantityLbl();
+        hpPotionQuantityLbl = controller.getHpPotionQuantityLbl();
 
 
     }
 
     public static void mobFightStart(){
         mob = Mob.createMob();
-        System.out.println(mob.getName());
         updateStats("mob", mob.getName(), mob.getHp(), mob.getDmg(),0);
         moveField.clear();
         mobAvatar.setImage(controller.getMobImage());
@@ -68,7 +74,6 @@ public class Actions {
         playerAvatarGame.setVisible(true);
         mobAvatar.setVisible(true);
         setTextMenuItem(allMenuItems,mobFightMenuTextItems);
-
 
         AnchorPane currentMainPane = getVisiblePane(allMainPanes);
         changePane(currentMainPane, controller.getMainPaneMobFight());
@@ -122,29 +127,53 @@ public class Actions {
 
         updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
         playerLogs.appendLogs("Предметы куплены\n");
-        playerLogs.appendLogs(player1.getInventory().toString() + "\n");
         controller.setCarts(0);
         gamelogs.appendLogs("Корзина пуста\n");
         items.clear();
     }
+    public static void quest1Start(){
+        moveField.clear();
+        updateStats("Char", "Чурбек", 0, 0,0);
+        mobAvatar.setImage(controller.getQuestCharImage());
+        mobAvatar.setVisible(true);
+        mobAvatarGame.setVisible(true);
+        playerAvatarGame.setVisible(true);
+        setTextMenuItem(allMenuItems, quest1TextItems);
+
+        gamelogs.appendLogs("Вы встретели Чурбека\nЧурбек: Приветсвую тебя путник! Этому миру пизда!\n");
+
+        AnchorPane currentMainPane = getVisiblePane(allMainPanes);
+        changePane(currentMainPane, controller.getMainPaneQuest1());
+    }
 
 
     public static void rndEvent(){
-        int rnd = RandomNums.randomNum(2);
-        System.out.println(rnd);
+        int rnd = RandomNums.randomNum(3);
         switch (rnd){
             case 0: Actions.mobFightStart(); break;
             case 1: Actions.shopStart(); break;
+            case 2: Actions.quest1Start(); break;
         }
 
 
     }
     public static void updateStats(String object, String name, int hp, int dmg, int money) {
         if (object.equals("player")) {
+            if (player1.getHp() <= 0){
+                RegLogController.showAlert(Alert.AlertType.CONFIRMATION, "Вы погибли\n", "Смерть","Смерть");
+                javafx.application.Platform.exit();
+            }
             playerStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d\nДЕНЬГИ: %d", name, hp, dmg, money));
-        } else {
+        }
+        else if (object.equals("mob"))
+        {
             mobStats.set(String.format("ИМЯ: %s\nХП: %d\nУРОН: %d", name, hp, dmg));
         }
+        else
+        {
+            mobStats.set(String.format("ИМЯ: %s\n", name));
+        }
+
     }
     private static AnchorPane getVisiblePane(List<AnchorPane> panes) {
         for (AnchorPane pane : panes) {
@@ -161,6 +190,12 @@ public class Actions {
 
     public static Mob getMob() {
         return mob;
+    }
+    public static Label getLomQuantityLbl() {
+        return lomQuantityLbl;
+    }
+    public static Label getHpPotionQuantityLbl() {
+        return hpPotionQuantityLbl;
     }
 
     public static void setMove(TextField field, MenuItem menuItem){
