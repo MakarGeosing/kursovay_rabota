@@ -14,19 +14,22 @@ public class Gamelogs {
     public void appendLogs(String text, Object... args){
          gameLogsTA.appendText(String.format(text, args));
     }
-
-    public void setLogs(String text){
-        gameLogsTA.setText(text);
-    }
-
     public void clearLogs(){
         gameLogsTA.clear();
     }
 
+
+    //геттеры
     public TextArea getGameLogsTA() {
         return gameLogsTA;
     }
     public  String getGameLogsText(){
         return gameLogsTA.getText();
     }
+
+    //сеттеры
+    public void setLogs(String text){
+        gameLogsTA.setText(text);
+    }
+
 }

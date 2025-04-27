@@ -26,12 +26,13 @@
                         <AnchorPane fx:id="actionsPaneBlank" prefHeight="165.0" prefWidth="700.0" visible="false" />
                         <AnchorPane fx:id="actionsPane" prefHeight="165.0" prefWidth="700.0">
                            <children>
-                              <TextField fx:id="moveField" layoutX="98.0" layoutY="52.0" prefHeight="17.0" prefWidth="419.0" />
+                              <TextField fx:id="moveField" layoutX="98.0" layoutY="52.0" prefHeight="17.0" prefWidth="419.0" promptText="Пиши сюда свои действия, либо используй стрелку справа" />
                               <SplitMenuButton fx:id="submitMenuBtn" layoutX="517.0" layoutY="52.0" mnemonicParsing="false" onAction="#submitMenuAction" prefHeight="25.0" prefWidth="134.0" text="Подтвердить ход">
                                  <items>
                                   <MenuItem fx:id="firstMenuItem" mnemonicParsing="false" onAction="#firstMenuItemAction" text="Обычная атака" />
                                   <MenuItem fx:id="secMenuItem" mnemonicParsing="false" onAction="#secMenuItemAction" text="Атака ломом" />
-                                    <MenuItem fx:id="thirdMenuItem" mnemonicParsing="false" onAction="#thirdMenuItemAction" text="Отступить" />
+                                     <MenuItem fx:id="thirdMenuItem" mnemonicParsing="false" onAction="#thirdMenuItemAction" text="Отступить" />
+                                     <MenuItem fx:id="fourthMenuItem" mnemonicParsing="false" onAction="#fourthMenuItemAction" text="Уйти" />
                                  </items>
                               </SplitMenuButton>
                            </children>
@@ -61,11 +62,11 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Настройки">
+            <Tab text="Выход">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="130.0" prefWidth="700.0">
                      <children>
-                        <Button fx:id="exitBtn" layoutX="643.0" layoutY="139.0" mnemonicParsing="false" onAction="#exitBtnAction" prefHeight="25.0" prefWidth="57.0" text="Выход" textFill="RED" />
+                        <Button fx:id="exitBtn" layoutX="322.0" layoutY="70.0" mnemonicParsing="false" onAction="#exitBtnAction" prefHeight="25.0" prefWidth="57.0" text="Выход" textFill="RED" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -73,10 +74,10 @@
       </TabPane>
       <AnchorPane layoutY="-1.0" prefHeight="380.0" prefWidth="118.0">
          <children>
-            <ImageView fx:id="playerAvatar" fitHeight="53.0" fitWidth="57.0" layoutY="2.0" pickOnBounds="true" />
+            <ImageView fx:id="playerAvatar" fitHeight="53.0" fitWidth="57.0" layoutY="5.0" pickOnBounds="true" />
             <TextArea fx:id="playerStatsTA" editable="false" layoutX="57.0" layoutY="2.0" prefHeight="63.0" prefWidth="97.0">
                <font>
-                  <Font size="11.0" />
+                  <Font size="10.0" />
                </font>
             </TextArea>
             <TextArea fx:id="playerLogsTA" editable="false" layoutY="65.0" prefHeight="315.0" prefWidth="154.0" wrapText="true" />
@@ -90,7 +91,7 @@
                   <Font size="11.0" />
                </font>
             </TextArea>
-            <ImageView fx:id="mobAvatar" fitHeight="46.0" fitWidth="50.0" layoutX="107.0" layoutY="7.0" pickOnBounds="true" />
+            <ImageView fx:id="mobAvatar" fitHeight="53.0" fitWidth="50.0" layoutX="107.0" layoutY="4.0" pickOnBounds="true" />
             <Separator orientation="VERTICAL" prefHeight="380.0" prefWidth="6.0" />
             <TextArea fx:id="gameLogsTA" editable="false" layoutX="1.0" layoutY="62.0" prefHeight="293.0" prefWidth="157.0" wrapText="true" />
             <SplitMenuButton fx:id="clearGameLogsBtn" layoutX="1.0" layoutY="354.0" mnemonicParsing="false" onAction="#clearGameLogsBtnAction" prefHeight="25.0" prefWidth="157.0" text="Очистить логи">
@@ -100,16 +101,12 @@
             </SplitMenuButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
-      <AnchorPane fx:id="mainPaneBlank" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false" />
       <AnchorPane fx:id="mainPaneMobFight" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
             <ImageView fx:id="mobAvatarGame3" fitHeight="128.0" fitWidth="118.0" layoutX="253.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="playerAvatarLbl" layoutX="40.0" layoutY="82.0" text="Это вы" visible="false" />
-            <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="269.0" layoutY="63.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" visible="false" wrapText="true" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0">
+      <AnchorPane fx:id="mainPaneShop" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false">
          <children>
             <ImageView fx:id="lomAvatarGame" fitHeight="94.0" fitWidth="106.0" layoutX="35.0" layoutY="96.0" onMouseClicked="#lomShopClicked" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -132,6 +129,11 @@
             <Label fx:id="shopHintLbl" layoutX="229.0" layoutY="327.0" prefHeight="39.0" prefWidth="147.0" text="Лкм - Добавить в корзину Пкм - убрать из коризны" textAlignment="JUSTIFY" wrapText="true" />
          </children>
       </AnchorPane>
+      <AnchorPane fx:id="mainPaneQuest1" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" />
+      <AnchorPane fx:id="mainPaneQuest2" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false" />
+      <AnchorPane fx:id="mainPaneBlank" layoutX="154.0" prefHeight="380.0" prefWidth="390.0" visible="false" />
+      <Label fx:id="playerAvatarLbl" layoutX="191.0" layoutY="79.0" text="Это вы" visible="false" />
+      <Label fx:id="mobAvatarLbl" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="69.0" prefHeight="39.0" prefWidth="118.0" textAlignment="CENTER" wrapText="true" />
       <ImageView fx:id="playerAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="154.0" layoutY="109.0" onMouseEntered="#playerAvatarEntered" onMouseExited="#playerAvatarExited" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="mobAvatarGame" fitHeight="128.0" fitWidth="118.0" layoutX="422.0" layoutY="109.0" onMouseEntered="#mobAvatarEntered" onMouseExited="#mobAvatarExited" pickOnBounds="true" preserveRatio="true" />
    </children>

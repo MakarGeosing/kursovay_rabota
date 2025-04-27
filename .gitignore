@@ -1,0 +1,5 @@
+/target/
+/system/
+/logs/
+/src/main/resources/com/game/gameDB.db-journal
+/gameDB.db
