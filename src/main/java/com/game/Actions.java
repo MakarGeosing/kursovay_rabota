@@ -138,7 +138,7 @@ public class Actions {
     }
     public static void quest1Start(){
         moveField.clear();
-        updateStats("Char", "Бек", 0, 0,0);
+        updateStats("Char", "?", 0, 0,0);
         mobAvatar.setImage(MainWindowController.getQuest1CharImage());
         mobAvatar.setVisible(true);
         mobAvatarGame.setVisible(true);

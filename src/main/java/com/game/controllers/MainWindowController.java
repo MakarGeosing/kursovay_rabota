@@ -154,12 +154,17 @@ public class MainWindowController {
     private void handleMobFight(String move) throws SQLException {
         switch (move) {
             case "Отступить":
-                Actions.setMenuItemsVisibility(false);
-                playerAvatarGame.setVisible(false);
-                mobAvatar.setVisible(false);
-                playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
-                Actions.getMob().mobAttack();
-                break;
+                if(!quest.equals("quest2")){
+                    System.out.println("Mob");
+                    Actions.setMenuItemsVisibility(false);
+                    playerAvatarGame.setVisible(false);
+                    mobAvatar.setVisible(false);
+                    playerLogs.appendLogs("Вы испугались %s и отступили.\n", Actions.getMob().getName());
+                    Actions.getMob().mobAttack();
+                    Actions.rndEvent();
+                    break;
+                }
+                else showInvalidMoveError(); break;
             case "Атака ломом":
                 Actions.getMob().mobTakeDmg("Ломом", (getPlayer().getDmg()), Actions.getMob().getHp());
                 break;
@@ -199,26 +204,25 @@ public class MainWindowController {
             case "Кто ты?": {
                 if (isWelcome){
                     isWelcome = false;
-                    gameLogs.appendLogs("Бек: Я ПОПРОСИЛ ТЕБЯ РАССКАЗАТЬ МНЕ ИСТОРИЮ!!!!!!!\n");
-                    playerLogs.appendLogs("Бек нанес вам 100 урона\n");
+                    gameLogs.appendLogs("?: Я ПОПРОСИЛ ТЕБЯ РАССКАЗАТЬ МНЕ ИСТОРИЮ!!!!!!!\n");
+                    playerLogs.appendLogs("? нанес вам 100 урона\n");
                     player1.setHp(getPlayer().getHp() - 100);
                     Actions.updateStats("player", player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
                 }
                 else {
-
+                    Actions.updateStats("Char", "Бек", 0, 0,0);
                     playerLogs.appendLogs("%s: %s?\n", player1.getName(), move);
-                    gameLogs.appendLogs("Бек: Я Бек, странствующий педофил.\n");
+                    gameLogs.appendLogs("Бек: Я Бек, кочевник, ищу свою место в этом мире.\n");
                     secMenuItem.setVisible(false);
                     thirdMenuItem.setVisible(true);
                     moveField.clear();
                 }
 
-
                 break;
             }
             case "Что тебе надо?": {
                 playerLogs.appendLogs("%s: %s?\n", player1.getName(), move);
-                gameLogs.appendLogs("Бек: Я хочу тебя трахнуть.....\n");
+                gameLogs.appendLogs("Бек: Я хочу предупредить тебя, это место очень опасно, будь осторожнее\n");
                 thirdMenuItem.setVisible(false);
                 moveField.clear();
                 break;
@@ -238,7 +242,7 @@ public class MainWindowController {
                 else
                 {
                     playerLogs.appendLogs("%s: %s", player1.getName(), moveField.getText() + "\n");
-                    gameLogs.appendLogs("Бек: Ого, это очень интересно!\n");
+                    gameLogs.appendLogs("?: Ого, это очень интересно!\n");
                     isWelcome = false;
                     moveField.clear();
                     break;
@@ -266,7 +270,7 @@ public class MainWindowController {
             }
             case "Я согласен":{
                 moveField.clear();
-                playerLogs.appendLogs("%s: %s", player1.getName(), move);
+                playerLogs.appendLogs("%s: %s\n", player1.getName(), move);
                 gameLogs.appendLogs("Житель: Спасибо огромное! ты сможешь найти его дальше по тропинке!\n");
                 thirdMenuItem.setVisible(false);
                 fourthMenuItem.setVisible(true);
@@ -298,11 +302,14 @@ public class MainWindowController {
                 break;
             }
             case "Уйти":{
-                moveField.clear();
-                Actions.setMenuItemsVisibility(false);
-                playerLogs.appendLogs("Вы ушли.\n");
-                setQuest("NULL");
-                break;
+                if (fourthMenuItem.isVisible()) {
+                    moveField.clear();
+                    Actions.setMenuItemsVisibility(false);
+                    playerLogs.appendLogs("Вы ушли.\n");
+                    setQuest("NULL");
+                    break;
+                }
+                else showInvalidMoveError(); break;
             }
             default: showInvalidMoveError(); break;
         }
@@ -496,6 +503,7 @@ public class MainWindowController {
     @FXML
     public void exitBtnAction(ActionEvent actionEvent) throws SQLException {
         player1.save();
+        Actions.saveGameParameters();
         Actions.saveGameParameters();
         RegLogController.showAlert(Alert.AlertType.INFORMATION,"Все данные были сохранены.", "Выход", "Выход из игры.");
         javafx.application.Platform.exit();
