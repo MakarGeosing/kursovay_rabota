@@ -12,7 +12,6 @@ module com.game {
     requires com.almasb.fxgl.all;
     requires com.almasb.fxgl.entity;
     requires java.desktop;
-    requires io.netty.all;
     requires java.sql;
 
     opens com.game.controllers;
