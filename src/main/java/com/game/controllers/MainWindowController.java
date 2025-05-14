@@ -123,12 +123,9 @@ public class MainWindowController {
                 break;
             }
         }
-
         Actions.updateStats("player",player1.getName(), player1.getHp(), player1.getDmg(), player1.getMoney());
-
-
     }
-
+    
     @FXML
     public void submitMenuAction(ActionEvent actionEvent) throws SQLException {
         String move = getMoveFieldText();
